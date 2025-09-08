@@ -1,9 +1,10 @@
-import { Component, OnDestroy, OnInit, input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { MevReceiptComponent } from '../mev-receipt/mev-receipt.component';
 import { MevReceipt, MevReport, MevReportZ } from '../../services/mev.service';
+import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -14,9 +15,9 @@ import { Subject } from 'rxjs';
   imports: [CommonModule, IonicModule, TranslateModule, MevReceiptComponent],
 })
 export class MevReceiptInfoComponent implements OnInit, OnDestroy {
-  readonly receipt = input.required<string[]>();
-  readonly mevReceipt = input.required<MevReceipt>();
-  readonly mevReport = input.required<MevReport | MevReportZ>();
+  @Input() receipt!: string[];
+  @Input() mevReceipt!: MevReceipt;
+  @Input() mevReport!: MevReport | MevReportZ;
   unsubscribe$: Subject<any> = new Subject();
 
   constructor(private modalCtrl: ModalController) {}

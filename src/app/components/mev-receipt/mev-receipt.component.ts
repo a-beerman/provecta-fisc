@@ -1,25 +1,25 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  input,
+  Input,
   OnInit,
-} from "@angular/core";
-import { CommonModule, DecimalPipe, DatePipe } from "@angular/common";
-import { FormsModule } from "@angular/forms";
-import { IonicModule } from "@ionic/angular";
-import { TranslateModule } from "@ngx-translate/core";
-import { QRCodeComponent } from "angularx-qrcode";
+} from '@angular/core';
+import { CommonModule, DecimalPipe, DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { IonicModule } from '@ionic/angular';
+import { TranslateModule } from '@ngx-translate/core';
+import { QRCodeComponent } from 'angularx-qrcode';
 import {
   MevReceipt,
   MevReport,
   MevReportZ,
   PaymentType,
-} from "../../services/mev.service";
+} from '../../services/mev.service';
 
 @Component({
-  selector: "app-mev-receipt",
-  templateUrl: "./mev-receipt.component.html",
-  styleUrls: ["./mev-receipt.component.scss"],
+  selector: 'app-mev-receipt',
+  templateUrl: './mev-receipt.component.html',
+  styleUrls: ['./mev-receipt.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
@@ -33,39 +33,44 @@ import {
   ],
 })
 export class MevReceiptComponent implements OnInit {
-  receipt = input<string[]>([]);
-  mevReceipt = input.required<MevReceipt>();
-  mevReport = input.required<MevReportZ | MevReport>();
+  @Input() receipt!: string[];
+  @Input() mevReceipt!: MevReceipt;
+  @Input() mevReport!: MevReportZ | MevReport;
 
-  reportPayments: { label: string; value: number }[] = [];
-  reportVats: { code: string; percent: string; rate: string; cost: string }[] = [];
-  reportReceiptsCount = 0;
+  reportPayments!: { label: string; value: number }[];
+  reportVats!: {
+    code: 'E' | 'A' | any;
+    percent: 0 | 20 | any;
+    cost: any;
+    rate: any;
+  }[];
+  reportReceiptsCount: number | undefined = 0;
 
-  receiptPayments: { label: string; value: number }[] = [];
-  receiptVats: { code: string; percent: number; cost: number }[] = [];
-  receiptActivities: {
+  receiptPayments!: { label: string; value: number }[];
+  receiptVats!: { code: string; percent: number; cost: number; rate?: any }[];
+  receiptActivities!: {
     name: string;
     amount: number;
     price: number;
     cost: number;
-  }[] = [];
+  }[];
 
   public get currentDate(): Date {
     return new Date();
   }
 
   public get zReport(): MevReportZ {
-    return this.mevReport() as unknown as MevReportZ;
+    return this.mevReport as unknown as MevReportZ;
   }
 
   constructor() {}
 
   ngOnInit(): void {
-    if (this.mevReport()) {
-      this.bindReportData(this.mevReport());
+    if (this.mevReport) {
+      this.bindReportData(this.mevReport);
     }
-    if (this.mevReceipt()) {
-      this.bindReceiptData(this.mevReceipt());
+    if (this.mevReceipt) {
+      this.bindReceiptData(this.mevReceipt);
     }
   }
 
@@ -80,13 +85,13 @@ export class MevReceiptComponent implements OnInit {
       report.daily.payments.field
         .filter((x) => +x.total > 0)
         .forEach((element) => {
-          let label = (Object.keys(PaymentType) as Array<keyof typeof PaymentType>).find(
-            (x) => PaymentType[x] === element.type
+          let label = Object.keys(PaymentType).find(
+            (x) => PaymentType[x as keyof typeof PaymentType] === element.type
           );
 
           if (label) {
             shiftPayments.push({
-              label: label.replace("Cash", "Numerar"),
+              label: label.replace('Cash', 'Numerar'),
               value: +element.total,
             });
           }
@@ -95,8 +100,8 @@ export class MevReceiptComponent implements OnInit {
       this.reportPayments = shiftPayments.filter((x) => x.value > 0);
 
       this.reportReceiptsCount = report.daily.receipts.field.find(
-        (x) => x.type === "1"
-      )?.count || 0;
+        (x) => x.type === '1'
+      )?.count;
     }
   }
 
@@ -116,13 +121,13 @@ export class MevReceiptComponent implements OnInit {
       receipt.data.payments.field
         .filter((x) => +x.deposit > 0)
         .forEach((element) => {
-          let label = (Object.keys(PaymentType) as Array<keyof typeof PaymentType>).find(
-            (x) => PaymentType[x] === element.type
+          let label = Object.keys(PaymentType).find(
+            (x) => PaymentType[x as keyof typeof PaymentType] === element.type
           );
 
           if (label) {
             payments.push({
-              label: label.replace("Cash", "Numerar"),
+              label: label.replace('Cash', 'Numerar'),
               value: +element.deposit,
             });
           }

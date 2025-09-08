@@ -19,20 +19,19 @@ export interface FiscalReport {
   providedIn: 'root',
 })
 export class FiscalService {
-
   constructor(private mevService: MevService) {}
 
   // Report Functions
-  generateXReport(): Observable<FiscalReport> {
+  generateXReport(): Observable<any> {
     console.log('Generating X Report...');
 
-    return this.mevService.addReport(false)
+    return this.mevService.addReport(false);
     // TODO: Implement actual fiscal device communication
-    return of({
-      type: 'X_REPORT',
-      data: { total: 0, transactions: 0 },
-      timestamp: new Date(),
-    });
+    // return of({
+    //   type: 'X_REPORT',
+    //   data: { total: 0, transactions: 0 },
+    //   timestamp: new Date(),
+    // });
   }
 
   generateZReport(): Observable<FiscalReport> {

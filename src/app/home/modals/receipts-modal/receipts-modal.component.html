@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Funcții Bon Fiscal</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismissModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      @for (receipt of receiptActions; track receipt.key) {
+        <ion-col size="12" size-md="6">
+          <ion-card button="true" (click)="receipt.action()">
+            <ion-card-header>
+              <ion-card-title class="card-title">
+                <ion-icon [name]="receipt.icon" class="card-icon"></ion-icon>
+                <span>{{ receipt.title }}</span>
+              </ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-button expand="block" fill="clear" color="primary">
+                Execută
+              </ion-button>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      }
+    </ion-row>
+  </ion-grid>
+
+  <ion-toast
+    [isOpen]="showToast"
+    [message]="toastMessage"
+    [duration]="3000"
+    [color]="toastColor"
+    (didDismiss)="showToast = false">
+  </ion-toast>
+</ion-content>

@@ -198,7 +198,7 @@ export class HomePage implements OnInit {
   }
 
   async openReportsModal() {
-    const { ReportsModalComponent } = await import('./modals/reports-modal.component');
+    const { ReportsModalComponent } = await import('./modals/reports-modal/reports-modal.component');
     const modal = await this.modalController.create({
       component: ReportsModalComponent,
       cssClass: 'reports-modal'
@@ -207,7 +207,7 @@ export class HomePage implements OnInit {
   }
 
   async openReceiptsModal() {
-    const { ReceiptsModalComponent } = await import('./modals/receipts-modal.component');
+    const { ReceiptsModalComponent } = await import('./modals/receipts-modal/receipts-modal.component');
     const modal = await this.modalController.create({
       component: ReceiptsModalComponent,
       cssClass: 'receipts-modal'

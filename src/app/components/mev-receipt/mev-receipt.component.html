@@ -1,37 +1,50 @@
-<ng-container *ngIf="receipt()">
+<ng-container *ngIf="receipt">
   <div class="mev ion-padding">
     <div class="font-monospace receipt">
-      <div class="line" *ngFor="let item of receipt()">{{ item }}</div>
-      <div class="flex flex-col items-center" *ngIf="mevReceipt().Verifier">
-        <a class="qr-code" [href]="mevReceipt().Verifier" target="_blank">
-          <qrcode [qrdata]="mevReceipt().Verifier!" [scale]="2" [errorCorrectionLevel]="'M'"> </qrcode>
+      <div class="line" *ngFor="let item of receipt">{{ item }}</div>
+      <div class="flex flex-col items-center" *ngIf="mevReceipt?.Verifier">
+        <a class="qr-code" [href]="mevReceipt.Verifier" target="_blank">
+          <qrcode
+            [qrdata]="mevReceipt.Verifier"
+            [scale]="2"
+            [errorCorrectionLevel]="'M'"
+          >
+          </qrcode>
         </a>
       </div>
     </div>
   </div>
 </ng-container>
-<ng-container *ngIf="!receipt()">
-  <div *ngIf="mevReport()" class="mev ion-padding">
+<ng-container *ngIf="!receipt">
+  <div *ngIf="mevReport" class="mev ion-padding">
     <div class="font-monospace receipt">
       <div class="receipt-header">
         <div class="flex flex-col items-center">
-          <p class="text-gray-600 text-xs">{{ mevReport().card.name }}</p>
+          <p class="text-gray-600 text-xs">{{ mevReport.card.name }}</p>
         </div>
         <div class="flex flex-col items-center">
-          <p class="text-gray-600 text-xs">COD FISCAL: {{ mevReport().card.idnx }}</p>
+          <p class="text-gray-600 text-xs">
+            COD FISCAL: {{ mevReport.card.idnx }}
+          </p>
         </div>
         <div class="flex flex-col items-center">
-          <p class="text-gray-600 text-xs">{{ mevReport().card.address }}</p>
+          <p class="text-gray-600 text-xs">{{ mevReport.card.address }}</p>
         </div>
         <div class="flex flex-col items-center">
-          <p class="text-gray-600 text-xs">NUMARUL DE ÎNREGISTRARE: {{ mevReport().card.number }}</p>
+          <p class="text-gray-600 text-xs">
+            NUMARUL DE ÎNREGISTRARE: {{ mevReport.card.number }}
+          </p>
         </div>
         <div class="flex flex-col items-center">
-          <p class="text-gray-600 text-xs">````````````````````````````````````````````````</p>
+          <p class="text-gray-600 text-xs">
+            ````````````````````````````````````````````````
+          </p>
         </div>
       </div>
       <div class="flex flex-col items-center">
-        <p class="text-gray-600">RAPORT ZILNIC {{ mevReport().type === 1 ? 'Z' : 'X' }}</p>
+        <p class="text-gray-600">
+          RAPORT ZILNIC {{ mevReport.type === 1 ? "Z" : "X" }}
+        </p>
       </div>
 
       <div class="flex justify-between items-center">
@@ -41,43 +54,70 @@
       <ng-container *ngFor="let vat of reportVats">
         <div class="flex justify-between items-center">
           <span class="text-base">TOTAL</span>
-          <span class="text-base font-medium">{{ vat.cost | number : '1.2-2' }} {{ vat.code }}</span>
+          <span class="text-base font-medium"
+            >{{ vat.cost | number : "1.2-2" }} {{ vat.code }}</span
+          >
         </div>
       </ng-container>
       <div class="flex justify-between items-center">
         <span class="text-base">SUMA</span>
-        <span class="text-base font-medium">{{ mevReport().daily.total | number : '1.2-2' }}</span>
+        <span class="text-base font-medium">{{
+          mevReport?.daily?.total | number : "1.2-2"
+        }}</span>
       </div>
 
       <div class="flex flex-col items-center">
-        <p class="text-gray-600 text-xs">````````````````````````````````````````````````</p>
+        <p class="text-gray-600 text-xs">
+          ````````````````````````````````````````````````
+        </p>
       </div>
 
       <div class="flex justify-between items-center">
         <span class="text-base">TOTAL VANZARE</span>
-        <span class="text-base font-medium"> {{ mevReport().daily.total | number : '1.2-2' }} </span>
+        <span class="text-base font-medium">
+          {{ mevReport.daily.total | number : "1.2-2" }}
+        </span>
       </div>
-      <div class="flex justify-between items-center ion-text-uppercase" *ngFor="let payment of reportPayments">
+      <div
+        class="flex justify-between items-center ion-text-uppercase"
+        *ngFor="let payment of reportPayments"
+      >
         <span class="text-base">{{ payment.label }}</span>
-        <span class="text-base font-medium">{{ payment.value | number : '1.2-2' }}</span>
+        <span class="text-base font-medium">{{
+          payment.value | number : "1.2-2"
+        }}</span>
       </div>
 
-      <ng-container *ngIf="mevReport().daily.totals?.in || mevReport().daily.totals?.out">
+      <ng-container
+        *ngIf="mevReport.daily.totals?.in || mevReport.daily.totals?.out"
+      >
         <div class="flex flex-col items-center">
           <p class="text-gray-600">SUME INTRODUSE</p>
         </div>
-        <div class="flex justify-between items-center" *ngIf="mevReport().daily.totals?.in">
+        <div
+          class="flex justify-between items-center"
+          *ngIf="mevReport.daily.totals?.in"
+        >
           <span class="text-base">INTRODUSE</span>
-          <span class="text-base font-medium"> {{ mevReport().daily.totals.in | number : '1.2-2' }} </span>
+          <span class="text-base font-medium">
+            {{ mevReport.daily.totals?.in | number : "1.2-2" }}
+          </span>
         </div>
-        <div class="flex justify-between items-center" *ngIf="mevReport().daily.totals?.out">
+        <div
+          class="flex justify-between items-center"
+          *ngIf="mevReport.daily.totals?.out"
+        >
           <span class="text-base">SCOASE</span>
-          <span class="text-base font-medium"> {{ mevReport().daily.totals.out | number : '1.2-2' }} </span>
+          <span class="text-base font-medium">
+            {{ mevReport.daily.totals?.out | number : "1.2-2" }}
+          </span>
         </div>
       </ng-container>
 
       <div class="flex flex-col items-center">
-        <p class="text-gray-600 text-xs">````````````````````````````````````````````````</p>
+        <p class="text-gray-600 text-xs">
+          ````````````````````````````````````````````````
+        </p>
       </div>
 
       <div class="flex flex-col items-center">
@@ -87,16 +127,24 @@
         <ng-container *ngFor="let vat of reportVats">
           <div class="flex justify-between items-center">
             <span class="text-base">TOTAL {{ vat.code }}</span>
-            <span class="text-base font-medium">{{ vat.cost | number : '1.2-2' }}</span>
+            <span class="text-base font-medium">{{
+              vat.cost | number : "1.2-2"
+            }}</span>
           </div>
           <div class="flex justify-between items-center">
-            <span class="text-base">TVA {{ vat.percent | number : '1.2-2' }}%</span>
-            <span class="text-base font-medium">{{ vat.rate | number : '1.2-2' }}</span>
+            <span class="text-base"
+              >TVA {{ vat.percent | number : "1.2-2" }}%</span
+            >
+            <span class="text-base font-medium">{{
+              vat.rate | number : "1.2-2"
+            }}</span>
           </div>
         </ng-container>
 
         <div class="flex flex-col items-center">
-          <p class="text-gray-600 text-xs">````````````````````````````````````````````````</p>
+          <p class="text-gray-600 text-xs">
+            ````````````````````````````````````````````````
+          </p>
         </div>
         <div class="flex justify-between items-center">
           <span class="text-base">NUMAR BONURI </span>
@@ -104,27 +152,37 @@
         </div>
         <div class="flex justify-between items-center">
           <span class="text-base">TOTAL VANZARE</span>
-          <span class="text-base font-medium">{{ mevReport().daily.total | number : '1.2-2' }}</span>
+          <span class="text-base font-medium">{{
+            mevReport.daily.total | number : "1.2-2"
+          }}</span>
         </div>
         <div class="flex justify-between items-center">
           <span class="text-base">TOTAL TVA</span>
-          <span class="text-base font-medium">{{ mevReport().daily.tax | number : '1.2-2' }}</span>
+          <span class="text-base font-medium">{{
+            mevReport.daily.tax | number : "1.2-2"
+          }}</span>
         </div>
 
         <div class="payments ion-text-uppercase">
           <div class="flex flex-col items-center">
-            <p class="text-gray-600 text-xs">````````````````````````````````````````````````</p>
+            <p class="text-gray-600 text-xs">
+              ````````````````````````````````````````````````
+            </p>
           </div>
         </div>
 
-        <ng-container *ngIf="mevReport().type === 1">
+        <ng-container *ngIf="mevReport.type === 1">
           <div class="flex justify-between items-center">
             <span class="text-base">ANUAL TOTAL</span>
-            <span class="text-base font-medium">{{ zReport.year.total | number : '1.2-2' }}</span>
+            <span class="text-base font-medium">{{
+              zReport.year.total | number : "1.2-2"
+            }}</span>
           </div>
           <div class="flex justify-between items-center">
             <span class="text-base">ANUAL TVA TOTAL</span>
-            <span class="text-base font-medium">{{ zReport.year.tax | number : '1.2-2' }}</span>
+            <span class="text-base font-medium">{{
+              zReport.year.tax | number : "1.2-2"
+            }}</span>
           </div>
 
           <div class="flex justify-between items-center">
@@ -139,128 +197,176 @@
         </ng-container>
       </div>
       <div class="flex justify-between items-center">
-        <span class="text-base">DATA {{ currentDate | date : 'dd.MM.yyyy' }}</span>
-        <span class="text-base font-medium"> ORA {{ currentDate | date : 'HH:mm:ss' }} </span>
+        <span class="text-base"
+          >DATA {{ currentDate | date : "dd.MM.yyyy" }}</span
+        >
+        <span class="text-base font-medium">
+          ORA {{ currentDate | date : "HH:mm:ss" }}
+        </span>
       </div>
 
       <div class="flex justify-between items-center">
         <span class="text-base">NUMĂRUL FABRICĂRII</span>
-        <span class="text-base font-medium"> {{ mevReport().card.factory }} </span>
+        <span class="text-base font-medium">
+          {{ mevReport.card.factory }}
+        </span>
       </div>
       <div class="flex flex-col items-center">
-        <p class="text-gray-600 text-xs">````````````````````````````````````````````````</p>
+        <p class="text-gray-600 text-xs">
+          ````````````````````````````````````````````````
+        </p>
       </div>
       <div class="flex justify-between items-center">
         <span class="text-base"></span>
-        <span class="text-base font-medium"> {{ mevReport().id.toString().padStart(10, '0') }} </span>
+        <span class="text-base font-medium">
+          {{ mevReport.id.toString().padStart(10, "0") }}
+        </span>
       </div>
     </div>
   </div>
 
-  <div *ngIf="mevReceipt()" class="mev ion-padding">
+  <div *ngIf="mevReceipt" class="mev ion-padding">
     <div class="font-monospace receipt">
       <div class="receipt-header">
         <div class="flex flex-col items-center">
-          <p class="text-gray-600 text-xs">{{ mevReceipt().card.name }}</p>
+          <p class="text-gray-600 text-xs">{{ mevReceipt.card.name }}</p>
         </div>
         <div class="flex flex-col items-center">
-          <p class="text-gray-600 text-xs">COD FISCAL: {{ mevReceipt().card.idnx }}</p>
+          <p class="text-gray-600 text-xs">
+            COD FISCAL: {{ mevReceipt.card.idnx }}
+          </p>
         </div>
         <div class="flex flex-col items-center">
-          <p class="text-gray-600 text-xs">{{ mevReceipt().card.address }}</p>
+          <p class="text-gray-600 text-xs">{{ mevReceipt.card.address }}</p>
         </div>
         <div class="flex flex-col items-center">
-          <p class="text-gray-600 text-xs">NUMARUL DE ÎNREGISTRARE: {{ mevReceipt().card.number }}</p>
+          <p class="text-gray-600 text-xs">
+            NUMARUL DE ÎNREGISTRARE: {{ mevReceipt.card.number }}
+          </p>
         </div>
         <div class="flex flex-col items-center">
-          <p class="text-gray-600 text-xs">````````````````````````````````````````````````</p>
+          <p class="text-gray-600 text-xs">
+            ````````````````````````````````````````````````
+          </p>
         </div>
       </div>
 
       <div class="flex flex-col">
-        <ng-container *ngFor="let item of mevReceipt().activities.field">
+        <ng-container *ngFor="let item of mevReceipt.activities.field">
           <div class="flex justify-between items-start">
             <span class="text-base">{{ item.name }}</span>
             <div class="itemValues flex">
               <div class="text-sm text-gray-600 amount">
-                {{ item.amount | number : '1.3-3' }} x {{ item.price | number : '1.2-2' }}
+                {{ item.amount | number : "1.3-3" }} x
+                {{ item.price | number : "1.2-2" }}
               </div>
-              <div class="text-sm text-gray-600 cost">{{ item.cost | number : '1.2-2' }} {{ item.tax.code }}</div>
+              <div class="text-sm text-gray-600 cost">
+                {{ item.cost | number : "1.2-2" }} {{ item.tax?.code }}
+              </div>
             </div>
           </div>
         </ng-container>
       </div>
 
       <div class="flex flex-col items-center">
-        <p class="text-gray-600 text-xs">````````````````````````````````````````````````</p>
+        <p class="text-gray-600 text-xs">
+          ````````````````````````````````````````````````
+        </p>
       </div>
 
       <div class="payments ion-text-uppercase">
         <div class="flex justify-between items-center">
           <span class="text-base">TOTAL</span>
-          <span class="text-base font-medium">{{ mevReceipt().data.total | number : '1.2-2' }}</span>
+          <span class="text-base font-medium">{{
+            mevReceipt.data.total | number : "1.2-2"
+          }}</span>
         </div>
       </div>
 
       <div class="flex flex-col items-center">
-        <p class="text-gray-600 text-xs">````````````````````````````````````````````````</p>
+        <p class="text-gray-600 text-xs">
+          ````````````````````````````````````````````````
+        </p>
       </div>
 
       <div class="vats ion-text-uppercase">
         <ng-container *ngFor="let vat of receiptVats">
           <div class="flex justify-between items-center">
             <span class="text-base">TOTAL {{ vat.code }}</span>
-            <span class="text-base font-medium">{{ vat.cost | number : '1.2-2' }}</span>
+            <span class="text-base font-medium">{{
+              vat.cost | number : "1.2-2"
+            }}</span>
           </div>
           <div class="flex justify-between items-center">
-            <span class="text-base">TVA {{ vat.percent | number : '1.2-2' }}%</span>
-            <span class="text-base font-medium">{{ (vat.cost * vat.percent / 100) | number : '1.2-2' }}</span>
+            <span class="text-base"
+              >TVA {{ vat.percent | number : "1.2-2" }}%</span
+            >
+            <span class="text-base font-medium">{{
+              vat.rate | number : "1.2-2"
+            }}</span>
           </div>
         </ng-container>
       </div>
 
       <div class="flex flex-col items-center">
-        <p class="text-gray-600 text-xs">````````````````````````````````````````````````</p>
+        <p class="text-gray-600 text-xs">
+          ````````````````````````````````````````````````
+        </p>
       </div>
 
       <div class="payments ion-text-uppercase">
         <ng-container *ngFor="let payment of receiptPayments">
           <div class="flex justify-between items-center">
             <span class="text-base">{{ payment.label }}</span>
-            <span class="text-base font-medium">{{ payment.value | number : '1.2-2' }}</span>
+            <span class="text-base font-medium">{{
+              payment.value | number : "1.2-2"
+            }}</span>
           </div>
         </ng-container>
       </div>
 
       <div class="flex flex-col items-center">
-        <p class="text-gray-600 text-xs">````````````````````````````````````````````````</p>
+        <p class="text-gray-600 text-xs">
+          ````````````````````````````````````````````````
+        </p>
       </div>
 
       <div class="flex justify-between items-center">
-        <span class="text-base">DATA {{ currentDate | date : 'dd.MM.yyyy' }}</span>
-        <span class="text-base font-medium">ORA {{ currentDate | date : 'HH:mm:ss' }}</span>
+        <span class="text-base"
+          >DATA {{ currentDate | date : "dd.MM.yyyy" }}</span
+        >
+        <span class="text-base font-medium"
+          >ORA {{ currentDate | date : "HH:mm:ss" }}</span
+        >
       </div>
 
       <div class="flex justify-between items-center">
         <span class="text-base">BON FISCAL</span>
-        <span class="text-base font-medium">{{ mevReceipt().receipt }}</span>
+        <span class="text-base font-medium">{{ mevReceipt.receipt }}</span>
       </div>
 
       <div class="flex justify-between items-center">
         <span class="text-base">NUMĂRUL FABRICĂRII</span>
-        <span class="text-base font-medium">{{ mevReceipt().card.factory }}</span>
+        <span class="text-base font-medium">{{ mevReceipt.card.factory }}</span>
       </div>
       <div class="flex flex-col items-center">
-        <p class="text-gray-600 text-xs">````````````````````````````````````````````````</p>
+        <p class="text-gray-600 text-xs">
+          ````````````````````````````````````````````````
+        </p>
       </div>
       <div class="flex justify-between items-center">
         <span class="text-base"></span>
-        <span class="text-base font-medium">{{ mevReceipt().data.idns }}</span>
+        <span class="text-base font-medium">{{ mevReceipt.data.idns }}</span>
       </div>
 
-      <div class="flex flex-col items-center" *ngIf="mevReceipt().Verifier">
-        <a class="qr-code" [href]="mevReceipt().Verifier" target="_blank">
-          <qrcode [qrdata]="mevReceipt().Verifier!" [scale]="2" [errorCorrectionLevel]="'M'"> </qrcode>
+      <div class="flex flex-col items-center" *ngIf="mevReceipt?.Verifier">
+        <a class="qr-code" [href]="mevReceipt.Verifier" target="_blank">
+          <qrcode
+            [qrdata]="mevReceipt.Verifier"
+            [scale]="2"
+            [errorCorrectionLevel]="'M'"
+          >
+          </qrcode>
         </a>
       </div>
     </div>

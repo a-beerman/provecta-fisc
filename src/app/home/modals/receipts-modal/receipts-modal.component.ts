@@ -19,7 +19,7 @@ import {
   IonToast,
   ModalController
 } from '@ionic/angular/standalone';
-import { FiscalService } from '../../services/fiscal.service';
+import { FiscalService } from '../../../services/fiscal.service';
 import { addIcons } from 'ionicons';
 import {
   receiptOutline,
@@ -35,74 +35,8 @@ import {
 
 @Component({
   selector: 'app-receipts-modal',
-  template: `
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Funcții Bon Fiscal</ion-title>
-        <ion-buttons slot="end">
-          <ion-button (click)="dismissModal()">
-            <ion-icon name="close-outline"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
-
-    <ion-content>
-      <ion-grid>
-        <ion-row>
-          @for (receipt of receiptActions; track receipt.key) {
-            <ion-col size="12" size-md="6">
-              <ion-card button="true" (click)="receipt.action()">
-                <ion-card-header>
-                  <ion-card-title class="card-title">
-                    <ion-icon [name]="receipt.icon" class="card-icon"></ion-icon>
-                    <span>{{ receipt.title }}</span>
-                  </ion-card-title>
-                </ion-card-header>
-                <ion-card-content>
-                  <ion-button expand="block" fill="clear" color="primary">
-                    Execută
-                  </ion-button>
-                </ion-card-content>
-              </ion-card>
-            </ion-col>
-          }
-        </ion-row>
-      </ion-grid>
-
-      <ion-toast
-        [isOpen]="showToast"
-        [message]="toastMessage"
-        [duration]="3000"
-        [color]="toastColor"
-        (didDismiss)="showToast = false">
-      </ion-toast>
-    </ion-content>
-  `,
-  styles: [`
-    .card-title {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 1.1rem;
-      font-weight: 600;
-    }
-
-    .card-icon {
-      font-size: 1.5rem;
-      color: var(--ion-color-primary);
-    }
-
-    ion-card {
-      margin: 8px;
-      border-radius: 12px;
-      transition: transform 0.2s ease;
-    }
-
-    ion-card:hover {
-      transform: translateY(-2px);
-    }
-  `],
+  templateUrl: './receipts-modal.component.html',
+  styleUrls: ['./receipts-modal.component.scss'],
   imports: [
     CommonModule,
     IonHeader,

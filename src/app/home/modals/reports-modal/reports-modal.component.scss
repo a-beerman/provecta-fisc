@@ -1,0 +1,22 @@
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.card-icon {
+  font-size: 1.5rem;
+  color: var(--ion-color-primary);
+}
+
+ion-card {
+  margin: 8px;
+  border-radius: 12px;
+  transition: transform 0.2s ease;
+}
+
+ion-card:hover {
+  transform: translateY(-2px);
+}
