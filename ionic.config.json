@@ -1,0 +1,7 @@
+{
+  "name": "provecta-pwa",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

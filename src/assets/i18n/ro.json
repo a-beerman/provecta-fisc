@@ -1,0 +1,54 @@
+{
+  "APP": {
+    "TITLE": "ProvectaFisc",
+    "MENU": {
+      "REPORTS": "Rapoarte",
+      "RECEIPTS": "Chitanțe",
+      "SETTINGS": "Setări"
+    }
+  },
+  "REPORTS": {
+    "TITLE": "Rapoarte",
+    "X_REPORT": "Raport X",
+    "Z_REPORT": "Raport Z",
+    "DAILY_REPORT": "Raport Zilnic",
+    "MONTHLY_REPORT": "Raport Lunar",
+    "FISCAL_MEMORY": "Memorie Fiscală",
+    "JOURNAL": "Jurnal ANAF",
+    "OPERATORS": "Raport Operatori",
+    "ARTICLES": "Raport Articole",
+    "DEPARTMENTS": "Raport Departamente",
+    "CASH_IN_OUT": "Intrări/Ieșiri Casa"
+  },
+  "RECEIPTS": {
+    "TITLE": "Funcții Chitanțe",
+    "NEW_RECEIPT": "Chitanță Nouă",
+    "FISCAL_RECEIPT": "Bon Fiscal",
+    "NON_FISCAL": "Non-Fiscal",
+    "INVOICE": "Factură",
+    "CREDIT_NOTE": "Notă de Credit",
+    "CANCEL_RECEIPT": "Anulare Bon",
+    "DUPLICATE": "Duplicat",
+    "PAYMENT": "Plată",
+    "CASH": "Numerar",
+    "CARD": "Card",
+    "VOUCHER": "Voucher"
+  },
+  "COMMON": {
+    "EXECUTE": "Execută",
+    "CANCEL": "Anulează",
+    "SAVE": "Salvează",
+    "DELETE": "Șterge",
+    "EDIT": "Editează",
+    "VIEW": "Vizualizează",
+    "PRINT": "Tipărește",
+    "EXPORT": "Exportă",
+    "SEARCH": "Caută",
+    "REFRESH": "Reîmprospătează",
+    "LOADING": "Se încarcă...",
+    "ERROR": "Eroare",
+    "SUCCESS": "Succes",
+    "WARNING": "Avertisment",
+    "INFO": "Informație"
+  }
+}

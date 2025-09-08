@@ -1,0 +1,54 @@
+{
+  "APP": {
+    "TITLE": "ProvectaFisc",
+    "MENU": {
+      "REPORTS": "Reports",
+      "RECEIPTS": "Receipts",
+      "SETTINGS": "Settings"
+    }
+  },
+  "REPORTS": {
+    "TITLE": "Reports",
+    "X_REPORT": "X Report",
+    "Z_REPORT": "Z Report",
+    "DAILY_REPORT": "Daily Report",
+    "MONTHLY_REPORT": "Monthly Report",
+    "FISCAL_MEMORY": "Fiscal Memory",
+    "JOURNAL": "ANAF Journal",
+    "OPERATORS": "Operators Report",
+    "ARTICLES": "Articles Report",
+    "DEPARTMENTS": "Departments Report",
+    "CASH_IN_OUT": "Cash In/Out"
+  },
+  "RECEIPTS": {
+    "TITLE": "Receipt Functions",
+    "NEW_RECEIPT": "New Receipt",
+    "FISCAL_RECEIPT": "Fiscal Receipt",
+    "NON_FISCAL": "Non-Fiscal",
+    "INVOICE": "Invoice",
+    "CREDIT_NOTE": "Credit Note",
+    "CANCEL_RECEIPT": "Cancel Receipt",
+    "DUPLICATE": "Duplicate",
+    "PAYMENT": "Payment",
+    "CASH": "Cash",
+    "CARD": "Card",
+    "VOUCHER": "Voucher"
+  },
+  "COMMON": {
+    "EXECUTE": "Execute",
+    "CANCEL": "Cancel",
+    "SAVE": "Save",
+    "DELETE": "Delete",
+    "EDIT": "Edit",
+    "VIEW": "View",
+    "PRINT": "Print",
+    "EXPORT": "Export",
+    "SEARCH": "Search",
+    "REFRESH": "Refresh",
+    "LOADING": "Loading...",
+    "ERROR": "Error",
+    "SUCCESS": "Success",
+    "WARNING": "Warning",
+    "INFO": "Information"
+  }
+}

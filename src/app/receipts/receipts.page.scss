@@ -1,0 +1,68 @@
+ion-card {
+  margin: 8px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &.card-success {
+    border-left: 4px solid var(--ion-color-success);
+  }
+
+  &.card-primary {
+    border-left: 4px solid var(--ion-color-primary);
+  }
+
+  &.card-medium {
+    border-left: 4px solid var(--ion-color-medium);
+  }
+
+  &.card-tertiary {
+    border-left: 4px solid var(--ion-color-tertiary);
+  }
+
+  &.card-warning {
+    border-left: 4px solid var(--ion-color-warning);
+  }
+
+  &.card-danger {
+    border-left: 4px solid var(--ion-color-danger);
+  }
+
+  &.card-secondary {
+    border-left: 4px solid var(--ion-color-secondary);
+  }
+}
+
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.card-icon {
+  font-size: 1.5rem;
+}
+
+ion-grid {
+  padding: 16px;
+}
+
+ion-card-content {
+  padding-top: 8px;
+}
+
+ion-button {
+  --border-radius: 8px;
+  font-weight: 500;
+}
