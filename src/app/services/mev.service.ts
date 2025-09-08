@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, tap } from 'rxjs';
+import { Utils } from './utils';
 
 export interface MevReportZ extends MevReport {
   report: string;
@@ -196,6 +197,7 @@ const allVatLetters = ['A', 'B', 'C', 'D', 'E'];
 })
 export class MevService {
   private HOST = 'https://mev.melitax.md:6656/api/';
+  card: any;
   // private HOST = 'https://provectadevices.com:3100/api/';
 
   get headers(): HttpHeaders {
@@ -400,10 +402,21 @@ export class MevService {
   //   );
   // }
 
-  public addReport(unit: any, withClosure = false): Observable<any> {
+  public addReport(withClosure = false): Observable<any> {
     const apiPath = 'acps/addReport';
 
-    return of(null);
+    const requestBody = {
+      card: this.card,
+      code: Utils.generateGuid(),
+      type: withClosure ? 1 : 2,
+      device: {
+        instanceId: Utils.getInstanceId(),
+      },
+    };
+
+    return this.http.post(`${this.HOST}${apiPath}`, requestBody, {
+      headers: this.headers,
+    });
     // const deviceVats = CommonHelper.getSettingValueByKey(unit, 'Vats', true);
 
     // return this.vatService.search(undefined, false).pipe(
@@ -488,9 +501,17 @@ export class MevService {
   public findCards(): Observable<any> {
     const apiPath = 'cards';
 
-    return this.http.get(`${this.HOST}${apiPath}`, {
-      headers: this.headers,
-    });
+    return this.http
+      .get(`${this.HOST}${apiPath}`, {
+        headers: this.headers,
+      })
+      .pipe(
+        tap((x) => {
+          if (x && Array.isArray(x) && x.length) {
+            this.card = x[0];
+          }
+        })
+      );
   }
 
   // public updateCard(entity: any & { endpoint: string }): Observable<any> {

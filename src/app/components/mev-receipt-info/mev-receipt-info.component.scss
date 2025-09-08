@@ -1,0 +1,13 @@
+.qr-code {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.multiline > span {
+  margin-top: 3px;
+  font-weight: 400;
+  font-size: 12px;
+  margin-right: 10px;
+}

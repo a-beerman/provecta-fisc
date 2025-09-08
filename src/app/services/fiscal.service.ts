@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
+import { MevService } from './mev.service';
 
 export interface FiscalCommand {
   id: string;
@@ -15,20 +16,22 @@ export interface FiscalReport {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FiscalService {
 
-  constructor() { }
+  constructor(private mevService: MevService) {}
 
   // Report Functions
   generateXReport(): Observable<FiscalReport> {
     console.log('Generating X Report...');
+
+    return this.mevService.addReport(false)
     // TODO: Implement actual fiscal device communication
     return of({
       type: 'X_REPORT',
       data: { total: 0, transactions: 0 },
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 
@@ -38,7 +41,7 @@ export class FiscalService {
     return of({
       type: 'Z_REPORT',
       data: { dailyTotal: 0, transactions: 0 },
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 
@@ -48,7 +51,7 @@ export class FiscalService {
     return of({
       type: 'DAILY_REPORT',
       data: { date: date || new Date(), total: 0 },
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 
@@ -58,7 +61,7 @@ export class FiscalService {
     return of({
       type: 'MONTHLY_REPORT',
       data: { month, year, total: 0 },
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 
@@ -68,7 +71,7 @@ export class FiscalService {
     return of({
       type: 'FISCAL_MEMORY',
       data: { entries: [] },
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 
@@ -78,7 +81,7 @@ export class FiscalService {
     return of({
       type: 'JOURNAL',
       data: { entries: [] },
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 
@@ -88,7 +91,7 @@ export class FiscalService {
     return of({
       type: 'OPERATORS_REPORT',
       data: { operators: [] },
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 
@@ -98,7 +101,7 @@ export class FiscalService {
     return of({
       type: 'ARTICLES_REPORT',
       data: { articles: [] },
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 
@@ -108,7 +111,7 @@ export class FiscalService {
     return of({
       type: 'DEPARTMENTS_REPORT',
       data: { departments: [] },
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 
@@ -118,7 +121,7 @@ export class FiscalService {
     return of({
       type: 'CASH_IN_OUT',
       data: { cashIn: 0, cashOut: 0 },
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 
@@ -141,10 +144,16 @@ export class FiscalService {
     return of({ receiptNumber: Math.floor(Math.random() * 1000000) });
   }
 
-  processPayment(amount: number, type: 'CASH' | 'CARD' | 'cash' | 'card' | 'voucher'): Observable<any> {
+  processPayment(
+    amount: number,
+    type: 'CASH' | 'CARD' | 'cash' | 'card' | 'voucher'
+  ): Observable<any> {
     console.log('Processing payment...', amount, type);
     // TODO: Implement actual fiscal device communication
-    return of({ success: true, transactionId: Math.floor(Math.random() * 1000000) });
+    return of({
+      success: true,
+      transactionId: Math.floor(Math.random() * 1000000),
+    });
   }
 
   applyDiscount(discountPercent: number): Observable<any> {
@@ -162,10 +171,10 @@ export class FiscalService {
   getFiscalInfo(): Observable<any> {
     console.log('Getting fiscal info...');
     // TODO: Implement actual fiscal device communication
-    return of({ 
-      serialNumber: 'FP123456', 
+    return of({
+      serialNumber: 'FP123456',
       firmwareVersion: '1.0.0',
-      fiscalMemoryNumber: 'FM789012'
+      fiscalMemoryNumber: 'FM789012',
     });
   }
 
