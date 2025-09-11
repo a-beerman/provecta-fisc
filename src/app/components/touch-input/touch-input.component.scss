@@ -1,0 +1,16 @@
+$button-size: 75px;
+
+ion-grid {
+  max-width: 300px;
+  ion-col {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+  }
+  ion-button {
+    --border-radius: 50%;
+    width: $button-size;
+    height: $button-size;
+    font-size: 25px;
+  }
+}

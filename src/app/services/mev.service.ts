@@ -378,29 +378,26 @@ export class MevService {
   //     );
   // }
 
-  // public addServiceReceipt(unit: any, amount: number): Observable<any> {
-  //   const apiPath = 'acps/addServiceReceipt';
+  public addServiceReceipt(amount: number): Observable<any> {
+    const apiPath = 'acps/addServiceReceipt';
 
-  //   const requestBody = {
-  //     card: this.getMevCard(unit),
-  //     code: CommonHelper.generateGuid(),
-  //     data: {
-  //       type: amount > 0 ? 1 : 2,
-  //       name: 'MDL',
-  //       total: Math.abs(amount),
-  //     },
-  //     device: {
-  //       instanceId: CommonHelper.getInstanceId(),
-  //     },
-  //   };
+    const requestBody = {
+      card: this.card,
+      code: Utils.generateGuid(),
+      data: {
+        type: amount > 0 ? 1 : 2,
+        name: 'MDL',
+        total: Math.abs(amount),
+      },
+      device: {
+        instanceId: Utils.getInstanceId(),
+      },
+    };
 
-  //   return this.http.post(
-  //     `${this.HOST}${apiPath}`,
-  //     requestBody,
-  //     true,
-  //     this.headers
-  //   );
-  // }
+    return this.http.post(`${this.HOST}${apiPath}`, requestBody, {
+      headers: this.headers,
+    });
+  }
 
   public addReport(withClosure = false): Observable<any> {
     const apiPath = 'acps/addReport';

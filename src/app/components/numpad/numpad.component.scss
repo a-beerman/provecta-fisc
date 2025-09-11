@@ -1,0 +1,12 @@
+ion-content {
+  --background: white;
+}
+ion-item {
+  --min-height: 60px;
+}
+.keyboard {
+  height: calc(100% - 56px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

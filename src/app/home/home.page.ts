@@ -15,11 +15,11 @@ import {
   IonRow,
   IonCol,
   IonToast,
-  ModalController
+  ModalController,
+  LoadingController,
+  AlertController,
 } from '@ionic/angular/standalone';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { TranslationService } from '../services/translation.service';
-import { FiscalService } from '../services/fiscal.service';
 import { addIcons } from 'ionicons';
 import {
   documentTextOutline,
@@ -33,16 +33,25 @@ import {
   archiveOutline,
   peopleOutline,
   calculatorOutline,
-  cloudDownloadOutline
+  cloudDownloadOutline,
 } from 'ionicons/icons';
+import { finalize } from 'rxjs';
+import { MevReceiptInfoComponent } from '../components/mev-receipt-info/mev-receipt-info.component';
+import { NumpadComponent } from '../components/numpad/numpad.component';
+import { MevService } from '../services/mev.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
-interface AppCard {
+interface SectionCard {
   id: string;
   title: string;
-  subtitle: string;
   icon: string;
   color: string;
   action: () => void;
+}
+
+interface AppSection {
+  title: string;
+  cards: SectionCard[];
 }
 
 @Component({
@@ -64,111 +73,102 @@ interface AppCard {
     IonGrid,
     IonRow,
     IonCol,
-    IonToast
-  ]
+    IonToast,
+  ],
 })
 export class HomePage implements OnInit {
-
   showToast = false;
   toastMessage = '';
   toastColor = 'success';
 
-  appCards: AppCard[] = [
+  sections: AppSection[] = [
     {
-      id: 'reports',
-      title: 'Rapoarte Fiscale',
-      subtitle: 'X, Z, Zilnice, Lunare',
-      icon: 'stats-chart-outline',
-      color: 'primary',
-      action: () => this.openReportsModal()
+      title: 'Reports',
+      cards: [
+        {
+          id: 'x-report',
+          title: 'X Report',
+          icon: 'document-text-outline',
+          color: 'primary',
+          action: () => this.generateXReport(),
+        },
+        {
+          id: 'z-report',
+          title: 'Z Report',
+          icon: 'stats-chart-outline',
+          color: 'secondary',
+          action: () => this.generateZReport(),
+        },
+        // {
+        //   id: 'fiscal-memory',
+        //   title: 'Fiscal Memory',
+        //   icon: 'archive-outline',
+        //   color: 'tertiary',
+        //   action: () => this.readFiscalMemory(),
+        // },
+      ],
     },
     {
-      id: 'receipts',
-      title: 'Funcții Chitanțe',
-      subtitle: 'Bonuri, Facturi, Plăți',
-      icon: 'receipt-outline',
-      color: 'secondary',
-      action: () => this.openReceiptsModal()
+      title: 'Cash Operations',
+      cards: [
+        {
+          id: 'cash-in',
+          title: 'Cash In',
+          icon: 'cash-outline',
+          color: 'success',
+          action: () => this.cash('in'),
+        },
+        {
+          id: 'cash-out',
+          title: 'Cash Out',
+          icon: 'card-outline',
+          color: 'warning',
+          action: () => this.cash('out'),
+        },
+        // {
+        //   id: 'cash-balance',
+        //   title: 'Cash Balance',
+        //   icon: 'calculator-outline',
+        //   color: 'medium',
+        //   action: () => this.checkCashBalance(),
+        // },
+      ],
     },
     {
-      id: 'fiscal-memory',
-      title: 'Memorie Fiscală',
-      subtitle: 'Citire și export',
-      icon: 'archive-outline',
-      color: 'tertiary',
-      action: () => this.readFiscalMemory()
+      title: 'Receipts',
+      cards: [
+        {
+          id: 'new-receipt',
+          title: 'New Receipt',
+          icon: 'receipt-outline',
+          color: 'primary',
+          action: () => this.openReceiptsModal(),
+        },
+        {
+          id: 'receipt-history',
+          title: 'Receipt History',
+          icon: 'business-outline',
+          color: 'secondary',
+          action: () => this.viewReceiptHistory(),
+        },
+        {
+          id: 'print-duplicate',
+          title: 'Print Duplicate',
+          icon: 'print-outline',
+          color: 'tertiary',
+          action: () => this.printDuplicate(),
+        },
+      ],
     },
-    {
-      id: 'operators',
-      title: 'Operatori',
-      subtitle: 'Gestionare utilizatori',
-      icon: 'people-outline',
-      color: 'success',
-      action: () => this.manageOperators()
-    },
-    {
-      id: 'articles',
-      title: 'Articole',
-      subtitle: 'Produse și servicii',
-      icon: 'business-outline',
-      color: 'warning',
-      action: () => this.manageArticles()
-    },
-    {
-      id: 'cash-operations',
-      title: 'Operații Casa',
-      subtitle: 'Intrări și ieșiri',
-      icon: 'cash-outline',
-      color: 'medium',
-      action: () => this.cashOperations()
-    },
-    {
-      id: 'payments',
-      title: 'Tipuri Plată',
-      subtitle: 'Numerar, Card, Voucher',
-      icon: 'card-outline',
-      color: 'primary',
-      action: () => this.managePayments()
-    },
-    {
-      id: 'printing',
-      title: 'Imprimante',
-      subtitle: 'Configurare și testare',
-      icon: 'print-outline',
-      color: 'danger',
-      action: () => this.managePrinting()
-    },
-    {
-      id: 'calculator',
-      title: 'Calculator Fiscal',
-      subtitle: 'Calcule și verificări',
-      icon: 'calculator-outline',
-      color: 'secondary',
-      action: () => this.openCalculator()
-    },
-    {
-      id: 'sync',
-      title: 'Sincronizare',
-      subtitle: 'Backup și restore',
-      icon: 'cloud-download-outline',
-      color: 'success',
-      action: () => this.syncData()
-    },
-    {
-      id: 'settings',
-      title: 'Setări Sistem',
-      subtitle: 'Configurare generală',
-      icon: 'settings-outline',
-      color: 'dark',
-      action: () => this.openSettings()
-    }
   ];
 
   constructor(
     private translate: TranslateService,
-    private fiscalService: FiscalService,
-    private translationService: TranslationService,
+    private mevService: MevService,
+    // private fiscalService: FiscalService,
     private modalController: ModalController,
+    private loadingController: LoadingController,
+    private alertController: AlertController,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     addIcons({
@@ -183,86 +183,149 @@ export class HomePage implements OnInit {
       archiveOutline,
       peopleOutline,
       calculatorOutline,
-      cloudDownloadOutline
+      cloudDownloadOutline,
     });
   }
 
-  ngOnInit() {
-    if (isPlatformBrowser(this.platformId)) {
-      console.log('Home page initialized');
-    }
-  }
+  ngOnInit() {}
 
-  trackByCardId(index: number, card: AppCard): string {
+  trackByCardId(index: number, card: SectionCard): string {
     return card.id;
   }
 
+  // Reports methods
+  async generateXReport() {
+    const loading = await this.loadingController.create({
+      message: 'Generare Raport X...',
+    });
+    await loading.present();
+
+    this.mevService
+      .addReport(false)
+      .pipe(finalize(() => loading.dismiss()))
+      .subscribe({
+        next: (report: any) => {
+          this.showMevReceiptInfo(report.response.text);
+          // this.showSuccessMessage('Raportul X a fost generat cu succes');
+        },
+        error: (error: any) => {
+          this.handleMessage(error);
+        },
+      });
+  }
+
+  async generateZReport() {
+    const confirmed = await this.showConfirmationAlert(
+      'Generare Raport Z',
+      'Sunteți sigur că doriți să generați Raportul Z? Această operațiune va închide ziua fiscală.',
+      'Generează',
+      'Anulează'
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    const loading = await this.loadingController.create({
+      message: 'Generare Raport Z...',
+    });
+    await loading.present();
+
+    this.mevService
+      .addReport(true)
+      .pipe(finalize(() => loading.dismiss()))
+      .subscribe({
+        next: (report: any) => {
+          this.showMevReceiptInfo(report.response.text);
+        },
+        error: (error: any) => {
+          this.handleMessage(error);
+        },
+      });
+  }
+
+  // Cash Operations methods
+  async cash(dir: 'in' | 'out') {
+    const modal = await this.modalController.create({
+      component: NumpadComponent,
+      componentProps: {
+        value: 0,
+        decimals: 2,
+        // maximum: this.maximum,
+        title: `Sumă Cash ${dir === 'in' ? 'Intrare' : 'Ieșire'}`,
+      },
+      cssClass: 'numpad-modal',
+    });
+
+    await modal.present();
+    const { data, role } = await modal.onDidDismiss();
+
+    if (!data || role !== 'ok') {
+      return;
+    }
+
+    const loading = await this.loadingController.create({
+      message: `Procesare ${dir === 'in' ? 'Intrare' : 'Ieșire'} Cash...`,
+    });
+    await loading.present();
+
+    this.mevService
+      .addServiceReceipt(parseFloat(data) * (dir === 'in' ? 1 : -1))
+      .pipe(finalize(() => loading.dismiss()))
+      .subscribe({
+        next: (report: any) => {
+          this.showMevReceiptInfo(report.response.text);
+        },
+        error: (error: any) => {
+          this.handleMessage(error);
+        },
+      });
+  }
+
+  checkCashBalance() {
+    this.showInfoMessage('Cash Balance check - to be implemented');
+  }
+
+  // Receipts methods
+  viewReceiptHistory() {
+    this.showInfoMessage('Receipt History - to be implemented');
+  }
+
+  printDuplicate() {
+    this.showInfoMessage('Print Duplicate - to be implemented');
+  }
+
   async openReportsModal() {
-    const { ReportsModalComponent } = await import('./modals/reports-modal/reports-modal.component');
+    const { ReportsModalComponent } = await import(
+      './modals/reports-modal/reports-modal.component'
+    );
     const modal = await this.modalController.create({
       component: ReportsModalComponent,
-      cssClass: 'reports-modal'
+      cssClass: 'reports-modal',
     });
     return await modal.present();
   }
 
   async openReceiptsModal() {
-    const { ReceiptsModalComponent } = await import('./modals/receipts-modal/receipts-modal.component');
+    const { ReceiptsModalComponent } = await import(
+      './modals/receipts-modal/receipts-modal.component'
+    );
     const modal = await this.modalController.create({
       component: ReceiptsModalComponent,
-      cssClass: 'receipts-modal'
+      cssClass: 'receipts-modal',
     });
     return await modal.present();
   }
 
   readFiscalMemory() {
-    this.fiscalService.getFiscalMemory().subscribe({
-      next: (report: any) => {
-        this.showSuccessMessage('Memoria fiscală a fost citită cu succes');
-      },
-      error: (error: any) => {
-        this.showErrorMessage('Eroare la citirea memoriei fiscale');
-      }
-    });
-  }
-
-  manageOperators() {
-    this.showInfoMessage('Funcția Operatori va fi implementată în curând');
-  }
-
-  manageArticles() {
-    this.showInfoMessage('Funcția Articole va fi implementată în curând');
-  }
-
-  cashOperations() {
-    this.fiscalService.getCashInOut().subscribe({
-      next: (result: any) => {
-        this.showSuccessMessage('Operații casa executate cu succes');
-      },
-      error: (error: any) => {
-        this.showErrorMessage('Eroare la executarea operațiilor casa');
-      }
-    });
-  }
-
-  managePayments() {
-    this.showInfoMessage('Funcția Tipuri Plată va fi implementată în curând');
-  }
-
-  managePrinting() {
-    this.showInfoMessage('Funcția Imprimante va fi implementată în curând');
-  }
-
-  openCalculator() {
-    this.showInfoMessage('Calculator Fiscal va fi implementat în curând');
-  }
-
-  syncData() {
-    this.showInfoMessage('Funcția Sincronizare va fi implementată în curând');
-  }
-
-  openSettings() {
-    this.showInfoMessage('Funcția Setări va fi implementată în curând');
+    // this.fiscalService.getFiscalMemory().subscribe({
+    //   next: (report: any) => {
+    //     this.showSuccessMessage('Fiscal memory read successfully');
+    //   },
+    //   error: (error: any) => {
+    //     this.showErrorMessage('Error reading fiscal memory');
+    //   },
+    // });
   }
 
   private showSuccessMessage(message: string) {
@@ -281,5 +344,143 @@ export class HomePage implements OnInit {
     this.toastMessage = message;
     this.toastColor = 'primary';
     this.showToast = true;
+  }
+
+  handleMessage(
+    err: HttpErrorResponse & { errors: any[] },
+    action?: (role: string) => void
+  ) {
+    const exception = err?.error as any;
+    let message = exception?.Message || '';
+
+    if (!message) {
+      if (typeof err.error === 'string') {
+        // If the error is a string, use it directly
+        message = err.error;
+      } else if (err.error && err.error.message) {
+        // If the error is an object with a message property, use that
+        message = err.error.message;
+      } else if (err.error && err.error.Message) {
+        // If the error is an object with a Message property, use that
+        message = err.error.Message;
+      }
+    }
+
+    if (!message) {
+      message = err.message;
+    }
+
+    // Handle structured error response with validation errors
+    if (err.error && err.error.errors && Array.isArray(err.error.errors)) {
+      const errorMessages = err.error.errors.map((error: any) => {
+        if (error.property && error.constraints) {
+          const constraintMessages = Object.values(error.constraints).join(
+            ', '
+          );
+          return `${error.property}: ${constraintMessages}`;
+        }
+        return JSON.stringify(error);
+      });
+
+      const pattern =
+        err.error.pattern ||
+        err.error.message ||
+        'Validation failed with errors:';
+      message = `${pattern}\n${errorMessages.join('<br/>')}`;
+    }
+    // Handle simple array of errors (fallback)
+    else if (err.errors) {
+      message = err.errors.join(', ');
+    }
+
+    if (err.error?.response?.errors) {
+      const additionalMessage = Object.keys(err.error.response.errors)
+        .map((key) => err.error.response.errors[key].message)
+        .filter((msg) => msg)
+        .join('<br/>');
+
+      if (additionalMessage) {
+        message += `<br/><br/>${additionalMessage}`;
+      }
+    }
+
+    if (!message) {
+      return;
+    }
+
+    this.warn(message, action);
+  }
+
+  async warn(message: string, action?: (role: string) => void) {
+    const buttons = [
+      {
+        text: 'Ok',
+        role: 'cancel',
+      },
+    ];
+
+    if (action) {
+      buttons.push({
+        text: await this.translate.get('Retry').toPromise(),
+        role: 'retry',
+      });
+    }
+
+    const confirm = await this.alertController.create({
+      message,
+      buttons,
+    });
+
+    await confirm.present();
+
+    // const { role } = await confirm.onDidDismiss();
+    // if (action) {
+    //   action(role);
+    // }
+  }
+
+  async showConfirmationAlert(
+    title: string,
+    message: string,
+    confirmText: string = 'Confirm',
+    cancelText: string = 'Cancel'
+  ): Promise<boolean> {
+    return new Promise(async (resolve) => {
+      const alert = await this.alertController.create({
+        header: title,
+        message: message,
+        buttons: [
+          {
+            text: cancelText,
+            role: 'cancel',
+            handler: () => {
+              resolve(false);
+            },
+          },
+          {
+            text: confirmText,
+            handler: () => {
+              resolve(true);
+            },
+          },
+        ],
+      });
+
+      await alert.present();
+    });
+  }
+
+  private showMevReceiptInfo(receipt: string[]): void {
+    this.modalController
+      .create({
+        component: MevReceiptInfoComponent,
+        componentProps: {
+          receipt,
+        },
+        cssClass: 'mev-receipt',
+      })
+      .then((modal) => {
+        modal.present();
+      });
   }
 }

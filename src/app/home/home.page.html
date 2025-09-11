@@ -16,29 +16,49 @@
     <p>Sistemul complet de management pentru casa de marcat fiscală</p>
   </div>
 
-  <ion-grid>
-    <ion-row>
-      <ion-col size="12" size-md="6" size-lg="4" size-xl="3" *ngFor="let card of appCards; trackBy: trackByCardId">
-        <ion-card button="true" (click)="card.action()" [class]="'card-' + card.color">
-          <ion-card-header>
-            <ion-card-title class="card-title">
-              <ion-icon [name]="card.icon" class="card-icon" [color]="card.color"></ion-icon>
-              <div class="card-text">
-                <h3>{{ card.title }}</h3>
-                <p>{{ card.subtitle }}</p>
-              </div>
-            </ion-card-title>
-          </ion-card-header>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  <!-- Sections with Card Grids -->
+  <div class="sections-container" *ngFor="let section of sections">
+    <div class="section-header">
+      <h3>{{ section.title }}</h3>
+    </div>
+
+    <ion-grid class="section-grid">
+      <ion-row>
+        <ion-col
+          size="12"
+          size-sm="6"
+          size-md="4"
+          *ngFor="let card of section.cards; trackBy: trackByCardId"
+        >
+          <ion-card
+            button="true"
+            (click)="card.action()"
+            [class]="'card-' + card.color"
+          >
+            <ion-card-header>
+              <ion-card-title class="card-title">
+                <ion-icon
+                  [name]="card.icon"
+                  class="card-icon"
+                  [color]="card.color"
+                ></ion-icon>
+                <div class="card-text">
+                  <h4>{{ card.title }}</h4>
+                </div>
+              </ion-card-title>
+            </ion-card-header>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
 
   <ion-toast
     [isOpen]="showToast"
     [message]="toastMessage"
     [duration]="3000"
     [color]="toastColor"
-    (didDismiss)="showToast = false">
+    (didDismiss)="showToast = false"
+  >
   </ion-toast>
 </ion-content>

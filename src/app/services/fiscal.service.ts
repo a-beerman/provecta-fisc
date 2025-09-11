@@ -26,22 +26,10 @@ export class FiscalService {
     console.log('Generating X Report...');
 
     return this.mevService.addReport(false);
-    // TODO: Implement actual fiscal device communication
-    // return of({
-    //   type: 'X_REPORT',
-    //   data: { total: 0, transactions: 0 },
-    //   timestamp: new Date(),
-    // });
   }
 
   generateZReport(): Observable<FiscalReport> {
-    console.log('Generating Z Report...');
-    // TODO: Implement actual fiscal device communication
-    return of({
-      type: 'Z_REPORT',
-      data: { dailyTotal: 0, transactions: 0 },
-      timestamp: new Date(),
-    });
+    return this.mevService.addReport(true);
   }
 
   generateDailyReport(date?: Date): Observable<FiscalReport> {

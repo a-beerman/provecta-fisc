@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title *ngIf="title">{{ title | translate }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="dismiss()">{{
+        "Cancel" | translate
+      }}</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content scrollY="false">
+  <ion-item>
+    <ion-label class="ion-text-center">
+      <h1>
+        {{ !secured ? result : securedResult }}
+      </h1>
+    </ion-label>
+  </ion-item>
+  <div class="keyboard">
+    <app-touch-input
+      [maximum]="maximum"
+      [decimals]="decimals"
+      [(value)]="result"
+      [clearValue]="clearValue"
+    ></app-touch-input>
+  </div>
+</ion-content>
+<ion-footer>
+  <ion-toolbar color="success">
+    <ion-button
+      [disabled]="!canApply"
+      (click)="apply()"
+      color="light"
+      fill="clear"
+      expand="full"
+    >
+      {{ "Apply" | translate }}
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>
