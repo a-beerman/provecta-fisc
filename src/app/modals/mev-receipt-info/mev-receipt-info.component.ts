@@ -2,10 +2,9 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
-import { MevReceiptComponent } from '../mev-receipt/mev-receipt.component';
 import { MevReceipt, MevReport, MevReportZ } from '../../services/mev.service';
-import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { MevReceiptComponent } from 'src/app/components/mev-receipt/mev-receipt.component';
 
 @Component({
   selector: 'app-mev-receipt-info',

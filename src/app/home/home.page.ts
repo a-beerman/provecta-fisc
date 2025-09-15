@@ -1,5 +1,11 @@
-import { Component, OnInit, PLATFORM_ID, Inject } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import {
+  Component,
+  OnInit,
+  PLATFORM_ID,
+  Inject,
+  AfterViewInit,
+  signal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -34,12 +40,15 @@ import {
   peopleOutline,
   calculatorOutline,
   cloudDownloadOutline,
+  addCircleOutline,
 } from 'ionicons/icons';
-import { finalize } from 'rxjs';
-import { MevReceiptInfoComponent } from '../components/mev-receipt-info/mev-receipt-info.component';
+import { finalize, tap } from 'rxjs';
 import { NumpadComponent } from '../components/numpad/numpad.component';
 import { MevService } from '../services/mev.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MevCardModalComponent } from '../modals/mev-card-modal/mev-card-modal.component';
+import { MevReceiptInfoComponent } from '../modals/mev-receipt-info/mev-receipt-info.component';
+import { Utils } from '../services/utils';
 
 interface SectionCard {
   id: string;
@@ -76,7 +85,10 @@ interface AppSection {
     IonToast,
   ],
 })
-export class HomePage implements OnInit {
+export class HomePage implements OnInit, AfterViewInit {
+  exportControlTape(): void {
+    throw new Error('Method not implemented.');
+  }
   showToast = false;
   toastMessage = '';
   toastColor = 'success';
@@ -99,6 +111,13 @@ export class HomePage implements OnInit {
           color: 'secondary',
           action: () => this.generateZReport(),
         },
+        {
+          id: 'export-control-tape',
+          title: 'Export Control Tape',
+          icon: 'cloud-download-outline',
+          color: 'tertiary',
+          action: () => this.openExportControlTapeModal(),
+        },
         // {
         //   id: 'fiscal-memory',
         //   title: 'Fiscal Memory',
@@ -109,7 +128,7 @@ export class HomePage implements OnInit {
       ],
     },
     {
-      title: 'Cash Operations',
+      title: 'Operations',
       cards: [
         {
           id: 'cash-in',
@@ -121,9 +140,16 @@ export class HomePage implements OnInit {
         {
           id: 'cash-out',
           title: 'Cash Out',
-          icon: 'card-outline',
+          icon: 'cash-outline',
           color: 'warning',
           action: () => this.cash('out'),
+        },
+        {
+          id: 'add-mev-card',
+          title: 'Adaugă Card MEV',
+          icon: 'add-circle-outline',
+          color: 'success',
+          action: () => this.openMevCardModal(),
         },
         // {
         //   id: 'cash-balance',
@@ -144,28 +170,37 @@ export class HomePage implements OnInit {
           color: 'primary',
           action: () => this.openReceiptsModal(),
         },
-        {
-          id: 'receipt-history',
-          title: 'Receipt History',
-          icon: 'business-outline',
-          color: 'secondary',
-          action: () => this.viewReceiptHistory(),
-        },
-        {
-          id: 'print-duplicate',
-          title: 'Print Duplicate',
-          icon: 'print-outline',
-          color: 'tertiary',
-          action: () => this.printDuplicate(),
-        },
+        // {
+        //   id: 'receipt-history',
+        //   title: 'Receipt History',
+        //   icon: 'business-outline',
+        //   color: 'secondary',
+        //   action: () => this.viewReceiptHistory(),
+        // },
+        // {
+        //   id: 'print-duplicate',
+        //   title: 'Print Duplicate',
+        //   icon: 'print-outline',
+        //   color: 'tertiary',
+        //   action: () => this.printDuplicate(),
+        // },
       ],
     },
   ];
 
+  card = signal<any | null>(null);
+
+  // cards$ = this.mevService.findCards().pipe(
+  //   tap((cards: any[]) => {
+  //     if (cards?.length) {
+  //       this.card.set(cards[0]);
+  //     }
+  //   })
+  // );
+
   constructor(
     private translate: TranslateService,
     private mevService: MevService,
-    // private fiscalService: FiscalService,
     private modalController: ModalController,
     private loadingController: LoadingController,
     private alertController: AlertController,
@@ -184,7 +219,12 @@ export class HomePage implements OnInit {
       peopleOutline,
       calculatorOutline,
       cloudDownloadOutline,
+      addCircleOutline,
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.readRegistrations();
   }
 
   ngOnInit() {}
@@ -297,7 +337,7 @@ export class HomePage implements OnInit {
 
   async openReportsModal() {
     const { ReportsModalComponent } = await import(
-      './modals/reports-modal/reports-modal.component'
+      '../modals/reports-modal/reports-modal.component'
     );
     const modal = await this.modalController.create({
       component: ReportsModalComponent,
@@ -308,11 +348,48 @@ export class HomePage implements OnInit {
 
   async openReceiptsModal() {
     const { ReceiptsModalComponent } = await import(
-      './modals/receipts-modal/receipts-modal.component'
+      '../modals/receipts-modal/receipts-modal.component'
     );
     const modal = await this.modalController.create({
       component: ReceiptsModalComponent,
       cssClass: 'receipts-modal',
+    });
+    return await modal.present();
+  }
+
+  async openMevCardModal() {
+    const { MevCardModalComponent } = await import(
+      '../modals/mev-card-modal/mev-card-modal.component'
+    );
+    const modal = await this.modalController.create({
+      component: MevCardModalComponent,
+      cssClass: 'mev-card-modal',
+    });
+
+    const result = await modal.present();
+    const { data, role } = await modal.onWillDismiss();
+
+    if (role === 'backdrop') {
+      return;
+    }
+
+    if (data) {
+      // Handle the form data here
+      console.log('MEV Card data:', data);
+      this.showSuccessMessage('Card MEV adăugat cu succes!');
+
+      // You can process the data here, e.g., send to API
+      // this.mevService.registerMevCard(data).subscribe(...)
+    }
+  }
+
+  async openExportControlTapeModal() {
+    const { ExportControlTapeModalComponent } = await import(
+      '../modals/export-control-tape-modal/export-control-tape-modal.component'
+    );
+    const modal = await this.modalController.create({
+      component: ExportControlTapeModalComponent,
+      cssClass: 'export-control-tape-modal',
     });
     return await modal.present();
   }
@@ -350,65 +427,7 @@ export class HomePage implements OnInit {
     err: HttpErrorResponse & { errors: any[] },
     action?: (role: string) => void
   ) {
-    const exception = err?.error as any;
-    let message = exception?.Message || '';
-
-    if (!message) {
-      if (typeof err.error === 'string') {
-        // If the error is a string, use it directly
-        message = err.error;
-      } else if (err.error && err.error.message) {
-        // If the error is an object with a message property, use that
-        message = err.error.message;
-      } else if (err.error && err.error.Message) {
-        // If the error is an object with a Message property, use that
-        message = err.error.Message;
-      }
-    }
-
-    if (!message) {
-      message = err.message;
-    }
-
-    // Handle structured error response with validation errors
-    if (err.error && err.error.errors && Array.isArray(err.error.errors)) {
-      const errorMessages = err.error.errors.map((error: any) => {
-        if (error.property && error.constraints) {
-          const constraintMessages = Object.values(error.constraints).join(
-            ', '
-          );
-          return `${error.property}: ${constraintMessages}`;
-        }
-        return JSON.stringify(error);
-      });
-
-      const pattern =
-        err.error.pattern ||
-        err.error.message ||
-        'Validation failed with errors:';
-      message = `${pattern}\n${errorMessages.join('<br/>')}`;
-    }
-    // Handle simple array of errors (fallback)
-    else if (err.errors) {
-      message = err.errors.join(', ');
-    }
-
-    if (err.error?.response?.errors) {
-      const additionalMessage = Object.keys(err.error.response.errors)
-        .map((key) => err.error.response.errors[key].message)
-        .filter((msg) => msg)
-        .join('<br/>');
-
-      if (additionalMessage) {
-        message += `<br/><br/>${additionalMessage}`;
-      }
-    }
-
-    if (!message) {
-      return;
-    }
-
-    this.warn(message, action);
+    this.warn(Utils.getErrorMessage(err), action);
   }
 
   async warn(message: string, action?: (role: string) => void) {
@@ -481,6 +500,41 @@ export class HomePage implements OnInit {
       })
       .then((modal) => {
         modal.present();
+      });
+  }
+
+  private async readRegistrations(): Promise<void> {
+    const loading = await this.loadingController.create({
+      message: 'Căutare înregistrări MEV...',
+    });
+
+    loading.present();
+
+    this.mevService
+      .findCards()
+      .pipe(finalize(() => loading.dismiss()))
+      .subscribe((cards: any) => {
+        console.log(cards);
+
+        if (cards?.length) {
+          this.card.set(cards[0]);
+        } else {
+          this.modalController
+            .create({
+              component: MevCardModalComponent,
+              canDismiss: false,
+            })
+            .then((modal) => {
+              modal.present();
+
+              return modal.onDidDismiss();
+            })
+            .then((result) => {
+              if (result.role == 'created' && result.data) {
+                this.card.set(result.data);
+              }
+            });
+        }
       });
   }
 }

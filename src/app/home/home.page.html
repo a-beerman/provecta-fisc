@@ -16,8 +16,10 @@
     <p>Sistemul complet de management pentru casa de marcat fiscală</p>
   </div>
 
+  @if(card()){
   <!-- Sections with Card Grids -->
-  <div class="sections-container" *ngFor="let section of sections">
+  @for (section of sections; track $index) {
+  <div class="sections-container">
     <div class="section-header">
       <h3>{{ section.title }}</h3>
     </div>
@@ -52,6 +54,9 @@
       </ion-row>
     </ion-grid>
   </div>
+  } } @else {
+  <p>Loading cards...</p>
+  }
 
   <ion-toast
     [isOpen]="showToast"

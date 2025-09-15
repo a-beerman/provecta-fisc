@@ -65,3 +65,13 @@
   --width: max(650px, 50%);
   --height: 80%;
 }
+
+
+
+.show-modal {
+  --backdrop-opacity: var(--ion-backdrop-opacity, 0.4);
+
+  &::part(content) {
+    box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
+  }
+}

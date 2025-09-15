@@ -468,32 +468,32 @@ export class MevService {
     // );
   }
 
-  // public getReceiptsByPeriod(
-  //   unit: any,
-  //   from: string,
-  //   to: string
-  // ): Observable<any> {
-  //   const apiPath = 'shared/text';
-  //   const mevCard = this.getMevCard(unit);
+  public getReceiptsByPeriod(
+    unit: any,
+    from: string,
+    to: string
+  ): Observable<any> {
+    const apiPath = 'shared/text';
+    const mevCard = this.getMevCard(unit);
 
-  //   const queryParams = new URLSearchParams();
-  //   queryParams.append('issuedOnFrom', from);
-  //   queryParams.append('issuedOnTo', to);
-  //   queryParams.append('cardId', mevCard.id);
+    const queryParams = new URLSearchParams();
+    queryParams.append('issuedOnFrom', from);
+    queryParams.append('issuedOnTo', to);
+    queryParams.append('cardId', mevCard.id);
 
-  //   return this.http.get(
-  //     `${this.HOST}${apiPath}?${queryParams.toString()}`,
-  //     true,
-  //     this.headers,
-  //     'blob' as 'blob'
-  //   );
-  // }
+    return this.http.get(
+      `${this.HOST}${apiPath}?${queryParams.toString()}`,
+      {headers: this.headers, responseType: 'blob'}
+    );
+  }
 
-  // public createCard(entity: any & { endpoint: string }): Observable<any> {
-  //   const apiPath = 'cards';
+  public createCard(entity: any & { endpoint: string }): Observable<any> {
+    const apiPath = 'cards';
 
-  //   return this.http.post(`${this.HOST}${apiPath}`, entity, true, this.headers);
-  // }
+    return this.http.post(`${this.HOST}${apiPath}`, entity, {
+      headers: this.headers,
+    });
+  }
 
   public findCards(): Observable<any> {
     const apiPath = 'cards';

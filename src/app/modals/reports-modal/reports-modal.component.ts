@@ -20,7 +20,7 @@ import {
   ModalController,
   LoadingController,
 } from '@ionic/angular/standalone';
-import { FiscalService } from '../../../services/fiscal.service';
+import { FiscalService } from '../../services/fiscal.service';
 import { addIcons } from 'ionicons';
 import {
   documentTextOutline,
@@ -33,8 +33,8 @@ import {
   archiveOutline,
   closeOutline,
 } from 'ionicons/icons';
-import { MevReceiptInfoComponent } from 'src/app/components/mev-receipt-info/mev-receipt-info.component';
 import { finalize } from 'rxjs';
+import { MevReceiptInfoComponent } from '../mev-receipt-info/mev-receipt-info.component';
 
 @Component({
   selector: 'app-reports-modal',

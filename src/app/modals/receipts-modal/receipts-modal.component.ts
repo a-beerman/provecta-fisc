@@ -19,7 +19,7 @@ import {
   IonToast,
   ModalController
 } from '@ionic/angular/standalone';
-import { FiscalService } from '../../../services/fiscal.service';
+import { FiscalService } from '../../services/fiscal.service';
 import { addIcons } from 'ionicons';
 import {
   receiptOutline,

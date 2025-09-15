@@ -59,6 +59,14 @@ export class TranslationService {
       "SUCCESS": "Succes",
       "WARNING": "Avertisment",
       "INFO": "Informație"
+    },
+    "FROM_DATE": "Data De La",
+    "TO_DATE": "Data Până La",
+    "SELECT_VALID_PERIOD": "Selectează o perioadă validă",
+    "EXPORT_CONTROL_TAPE": {
+      "TITLE": "Export Bandă Control",
+      "PERIOD_LABEL": "Perioada",
+      "DOWNLOAD_BUTTON": "Descarcă Banda de Control"
     }
   };
 
@@ -114,6 +122,14 @@ export class TranslationService {
       "SUCCESS": "Success",
       "WARNING": "Warning",
       "INFO": "Information"
+    },
+    "FROM_DATE": "From Date",
+    "TO_DATE": "To Date",
+    "SELECT_VALID_PERIOD": "Select a valid period",
+    "EXPORT_CONTROL_TAPE": {
+      "TITLE": "Export Control Tape",
+      "PERIOD_LABEL": "Period",
+      "DOWNLOAD_BUTTON": "Download Control Tape"
     }
   };
 

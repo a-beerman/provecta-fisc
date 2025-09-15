@@ -49,6 +49,15 @@
     "ERROR": "Error",
     "SUCCESS": "Success",
     "WARNING": "Warning",
-    "INFO": "Information"
+    "INFO": "Information",
+    "DOWNLOAD": "Download",
+    "PERIOD": "Period"
+  },
+  "FROM_DATE": "From Date",
+  "TO_DATE": "To Date",
+  "EXPORT_CONTROL_TAPE": {
+    "TITLE": "Export Control Tape",
+    "PERIOD_LABEL": "Period",
+    "DOWNLOAD_BUTTON": "Download Control Tape"
   }
 }

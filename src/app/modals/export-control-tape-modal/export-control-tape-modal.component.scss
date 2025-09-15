@@ -1,0 +1,44 @@
+ion-datetime {
+  --ion-text-color: #000000;
+  --ion-color-base: var(--ion-color-primary);
+  color: #000000;
+}
+
+.period {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  > div:not(.delimiter) {
+    flex: 1;
+  }
+}
+
+// .period {
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   gap: 1rem;
+
+//   .delimiter {
+//     font-weight: bold;
+//     font-size: 1.2rem;
+//     color: var(--ion-color-medium);
+//   }
+
+//   ion-datetime-button {
+//     flex: 1;
+//   }
+// }
+
+// ion-item {
+//   --padding-start: 16px;
+//   --inner-padding-end: 16px;
+// }
+
+// h3 {
+//   margin: 0;
+//   font-weight: 600;
+//   color: var(--ion-color-primary);
+// }

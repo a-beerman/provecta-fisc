@@ -1,0 +1,50 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Adaugă Card Nou MEV</ion-title>
+    <!-- <ion-buttons slot="end">
+      <ion-button (click)="dismissModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons> -->
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="mevCardForm" (ngSubmit)="saveMevCard()">
+    <ion-list>
+      <ion-item *ngFor="let field of formFields">
+        <ion-input
+          [label]="field.label"
+          labelPlacement="stacked"
+          [formControlName]="field.key"
+          value="Default value"
+        >
+        </ion-input>
+      </ion-item>
+    </ion-list>
+  </form>
+
+  <ion-toast
+    [isOpen]="showToast"
+    [innerHTML]="toastMessage"
+    [duration]="10000"
+    [color]="toastColor"
+    (didDismiss)="showToast = false"
+  >
+  </ion-toast>
+</ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-button
+      expand="full"
+      size="large"
+      color="primary"
+      class="ion-no-margin"
+      [disabled]="!mevCardForm.valid"
+      (click)="saveMevCard()"
+    >
+      <ion-icon name="save-outline" slot="start"></ion-icon>
+      Salvează Card MEV
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

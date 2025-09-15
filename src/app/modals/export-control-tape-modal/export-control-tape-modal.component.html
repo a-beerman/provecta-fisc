@@ -1,0 +1,83 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>{{ "EXPORT_CONTROL_TAPE.TITLE" | translate }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismissModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item>
+      <ion-label class="ion-text-center">
+        <h3>{{ "EXPORT_CONTROL_TAPE.PERIOD_LABEL" | translate }}</h3>
+      </ion-label>
+    </ion-item>
+    <div class="period ion-padding">
+      <div>
+        <ion-datetime-button datetime="dateFrom"></ion-datetime-button>
+      </div>
+      <div class="delimiter">-</div>
+      <div>
+        <ion-datetime-button datetime="dateTo"></ion-datetime-button>
+      </div>
+    </div>
+  </ion-list>
+
+  <ion-toast
+    [isOpen]="showToast"
+    [message]="toastMessage"
+    [duration]="3000"
+    [color]="toastColor"
+    (didDismiss)="showToast = false"
+  >
+  </ion-toast>
+</ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-button
+      expand="full"
+      size="large"
+      color="primary"
+      class="ion-no-margin"
+      (click)="downloadControlTape()"
+    >
+      <ion-icon
+        slot="start"
+        name="cloud-download-outline"
+        color="light"
+      ></ion-icon
+      >{{ "EXPORT_CONTROL_TAPE.DOWNLOAD_BUTTON" | translate }}</ion-button
+    >
+  </ion-toolbar>
+</ion-footer>
+
+<ion-modal [keepContentsMounted]="true">
+  <ng-template>
+    <ion-datetime
+      id="dateFrom"
+      presentation="date"
+      [locale]="translate.currentLang"
+      [showDefaultButtons]="true"
+      [(ngModel)]="dateFrom"
+      [cancelText]="'Dismiss' | translate"
+      [doneText]="'Done' | translate"
+    ></ion-datetime>
+  </ng-template>
+</ion-modal>
+<ion-modal [keepContentsMounted]="true">
+  <ng-template>
+    <ion-datetime
+      id="dateTo"
+      presentation="date"
+      [locale]="translate.currentLang"
+      [showDefaultButtons]="true"
+      [(ngModel)]="dateTo"
+      [cancelText]="'Dismiss' | translate"
+      [doneText]="'Done' | translate"
+    ></ion-datetime>
+  </ng-template>
+</ion-modal>

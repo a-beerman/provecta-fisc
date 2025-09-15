@@ -16,12 +16,14 @@ import {
 export const appConfig: ApplicationConfig = {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    provideIonicAngular(),
+    provideIonicAngular({
+      innerHTMLTemplatesEnabled: true,
+    }),
     provideRouter(routes, withPreloading(PreloadAllModules)),
     provideHttpClient(),
     importProvidersFrom(
       TranslateModule.forRoot({
-        fallbackLang: 'ro',
+        defaultLanguage: 'ro',
       })
     ),
   ],
