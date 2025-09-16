@@ -21,6 +21,7 @@ import {
   IonRow,
   IonCol,
   IonToast,
+  IonLoading,
   ModalController,
   LoadingController,
   AlertController,
@@ -44,11 +45,12 @@ import {
 } from 'ionicons/icons';
 import { finalize, tap } from 'rxjs';
 import { NumpadComponent } from '../components/numpad/numpad.component';
-import { MevService } from '../services/mev.service';
+import { MevReceipt, MevService } from '../services/mev.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MevCardModalComponent } from '../modals/mev-card-modal/mev-card-modal.component';
 import { MevReceiptInfoComponent } from '../modals/mev-receipt-info/mev-receipt-info.component';
 import { Utils } from '../services/utils';
+import { FiscalReceiptModalComponent } from '../modals/fiscal-receipt-modal/fiscal-receipt-modal.component';
 
 interface SectionCard {
   id: string;
@@ -83,6 +85,7 @@ interface AppSection {
     IonRow,
     IonCol,
     IonToast,
+    IonLoading,
   ],
 })
 export class HomePage implements OnInit, AfterViewInit {
@@ -95,25 +98,25 @@ export class HomePage implements OnInit, AfterViewInit {
 
   sections: AppSection[] = [
     {
-      title: 'Reports',
+      title: 'SECTIONS.REPORTS',
       cards: [
         {
           id: 'x-report',
-          title: 'X Report',
+          title: 'REPORTS.X_REPORT',
           icon: 'document-text-outline',
           color: 'primary',
           action: () => this.generateXReport(),
         },
         {
           id: 'z-report',
-          title: 'Z Report',
+          title: 'REPORTS.Z_REPORT',
           icon: 'stats-chart-outline',
           color: 'secondary',
           action: () => this.generateZReport(),
         },
         {
           id: 'export-control-tape',
-          title: 'Export Control Tape',
+          title: 'REPORTS.EXPORT_CONTROL_TAPE',
           icon: 'cloud-download-outline',
           color: 'tertiary',
           action: () => this.openExportControlTapeModal(),
@@ -128,25 +131,25 @@ export class HomePage implements OnInit, AfterViewInit {
       ],
     },
     {
-      title: 'Operations',
+      title: 'SECTIONS.OPERATIONS',
       cards: [
         {
           id: 'cash-in',
-          title: 'Cash In',
+          title: 'OPERATIONS.CASH_IN',
           icon: 'cash-outline',
           color: 'success',
           action: () => this.cash('in'),
         },
         {
           id: 'cash-out',
-          title: 'Cash Out',
+          title: 'OPERATIONS.CASH_OUT',
           icon: 'cash-outline',
           color: 'warning',
           action: () => this.cash('out'),
         },
         {
           id: 'add-mev-card',
-          title: 'Adaugă Card MEV',
+          title: 'OPERATIONS.ADD_MEV_CARD',
           icon: 'add-circle-outline',
           color: 'success',
           action: () => this.openMevCardModal(),
@@ -161,14 +164,14 @@ export class HomePage implements OnInit, AfterViewInit {
       ],
     },
     {
-      title: 'Receipts',
+      title: 'SECTIONS.RECEIPTS',
       cards: [
         {
           id: 'new-receipt',
-          title: 'New Receipt',
+          title: 'RECEIPTS.NEW_RECEIPT',
           icon: 'receipt-outline',
           color: 'primary',
-          action: () => this.openReceiptsModal(),
+          action: () => this.openFiscalReceiptModal(),
         },
         // {
         //   id: 'receipt-history',
@@ -185,6 +188,18 @@ export class HomePage implements OnInit, AfterViewInit {
         //   action: () => this.printDuplicate(),
         // },
       ],
+      // {
+      //   title: 'Shifts',
+      //   cards:[
+      //     {
+      //       id: 'shift-close',
+      //       title: 'Close Shift',
+      //       icon: 'people-outline',
+      //       color: 'tertiary',
+      //       action: () => this.generateZReport(),
+      //     }
+      //   ]
+      // }
     },
   ];
 
@@ -335,26 +350,56 @@ export class HomePage implements OnInit, AfterViewInit {
     this.showInfoMessage('Print Duplicate - to be implemented');
   }
 
-  async openReportsModal() {
-    const { ReportsModalComponent } = await import(
-      '../modals/reports-modal/reports-modal.component'
-    );
-    const modal = await this.modalController.create({
-      component: ReportsModalComponent,
-      cssClass: 'reports-modal',
-    });
-    return await modal.present();
-  }
+  // async openReportsModal() {
+  //   const { ReportsModalComponent } = await import(
+  //     '../modals/reports-modal/reports-modal.component'
+  //   );
+  //   const modal = await this.modalController.create({
+  //     component: ReportsModalComponent,
+  //     cssClass: 'reports-modal',
+  //   });
+  //   return await modal.present();
+  // }
 
-  async openReceiptsModal() {
-    const { ReceiptsModalComponent } = await import(
-      '../modals/receipts-modal/receipts-modal.component'
-    );
+  // async openReceiptsModal() {
+  //   const { ReceiptsModalComponent } = await import(
+  //     '../modals/receipts-modal/receipts-modal.component'
+  //   );
+  //   const modal = await this.modalController.create({
+  //     component: ReceiptsModalComponent,
+  //     cssClass: 'receipts-modal',
+  //   });
+  //   return await modal.present();
+  // }
+
+  async openFiscalReceiptModal() {
     const modal = await this.modalController.create({
-      component: ReceiptsModalComponent,
-      cssClass: 'receipts-modal',
+      component: FiscalReceiptModalComponent,
+      cssClass: 'midsize-modal',
     });
-    return await modal.present();
+
+    await modal.present();
+    const { data, role } = await modal.onWillDismiss();
+
+    if (role !== 'created') {
+      return;
+    }
+
+    if (data) {
+      const mevReceipt = {
+        ...data.request.json,
+        Verifier: data.response.verifier,
+      } as MevReceipt;
+
+      this.showMevReceiptInfo(data.response.text, mevReceipt);
+
+      // Handle the receipt data here
+      console.log('Fiscal Receipt data:', data);
+      this.showSuccessMessage('Bon fiscal creat cu succes!');
+
+      // You can process the data here, e.g., send to MEV service
+      // this.mevService.addFiscalReceipt(data).subscribe(...)
+    }
   }
 
   async openMevCardModal() {
@@ -489,12 +534,13 @@ export class HomePage implements OnInit, AfterViewInit {
     });
   }
 
-  private showMevReceiptInfo(receipt: string[]): void {
+  private showMevReceiptInfo(receipt: string[], mevReceipt?: MevReceipt): void {
     this.modalController
       .create({
         component: MevReceiptInfoComponent,
         componentProps: {
           receipt,
+          mevReceipt: mevReceipt,
         },
         cssClass: 'mev-receipt',
       })

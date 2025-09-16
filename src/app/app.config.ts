@@ -6,12 +6,28 @@ import {
   withPreloading,
   PreloadAllModules,
 } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { HttpClient } from '@angular/common/http';
 import { routes } from './app.routes';
 import {
   IonicRouteStrategy,
   provideIonicAngular,
 } from '@ionic/angular/standalone';
+import { Observable } from 'rxjs';
+
+// Custom HTTP loader for translation files
+export class CustomTranslateLoader implements TranslateLoader {
+  constructor(private http: HttpClient) {}
+
+  getTranslation(lang: string): Observable<any> {
+    return this.http.get(`./assets/i18n/${lang}.json`);
+  }
+}
+
+// Factory function for creating the loader
+export function HttpLoaderFactory(http: HttpClient) {
+  return new CustomTranslateLoader(http);
+}
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -23,7 +39,12 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     importProvidersFrom(
       TranslateModule.forRoot({
-        defaultLanguage: 'ro',
+        loader: {
+          provide: TranslateLoader,
+          useFactory: HttpLoaderFactory,
+          deps: [HttpClient]
+        },
+        defaultLanguage: 'ro'
       })
     ),
   ],

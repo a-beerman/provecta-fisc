@@ -128,8 +128,8 @@ export interface MevReceipt {
     key: string;
   };
   data: {
-    total: string;
-    idns: string;
+    total?: string;
+    idns?: string;
     payments: {
       field: Array<{
         type: string;
@@ -214,14 +214,22 @@ export class MevService {
     private readonly http: HttpClient // private insight: InsightsService, // private modalCtrl: ModalController, // private vatService: VatService
   ) {}
 
-  // public addFiscalReceipt(
-  //   unit: any,
-  //   document: Document,
-  //   vats: Vat[],
-  //   paymentTypes: TenderActionType[]
-  // ): Observable<any> {
-  //   const apiPath = 'acps/addFiscalReceipt';
+  public addFiscalReceipt(receipt: MevReceipt): Observable<any> {
+    const apiPath = 'acps/addFiscalReceipt';
 
+    const requestBody = {
+      code: Utils.generateGuid(),
+      device: {
+        instanceId: Utils.getInstanceId(),
+      },
+      ...receipt,
+      card: this.card,
+    };
+
+    return this.http.post(`${this.HOST}${apiPath}`, requestBody, {
+      headers: this.headers,
+    });
+  }
   //   try {
   //     CommonHelper.checkReceiptPayoffs(document);
   //   } catch (error) {
@@ -481,10 +489,10 @@ export class MevService {
     queryParams.append('issuedOnTo', to);
     queryParams.append('cardId', mevCard.id);
 
-    return this.http.get(
-      `${this.HOST}${apiPath}?${queryParams.toString()}`,
-      {headers: this.headers, responseType: 'blob'}
-    );
+    return this.http.get(`${this.HOST}${apiPath}?${queryParams.toString()}`, {
+      headers: this.headers,
+      responseType: 'blob',
+    });
   }
 
   public createCard(entity: any & { endpoint: string }): Observable<any> {

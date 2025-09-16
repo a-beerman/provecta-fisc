@@ -1,0 +1,59 @@
+.product-total {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-weight: 500;
+  color: var(--ion-color-primary);
+}
+
+.text-success {
+  color: var(--ion-color-success);
+}
+
+.text-danger {
+  color: var(--ion-color-danger);
+}
+
+.validation-message {
+  text-align: center;
+  color: var(--ion-color-warning);
+  font-size: 0.9rem;
+  margin-top: 8px;
+}
+
+ion-card {
+  margin: 16px;
+}
+
+ion-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+ion-grid {
+  padding: 0;
+}
+
+ion-row {
+  margin-bottom: 8px;
+}
+
+ion-footer ion-toolbar {
+  padding: 16px;
+}
+
+ion-input, ion-select {
+  --padding-start: 12px;
+}
+
+.summary-row {
+  border-bottom: 1px solid var(--ion-color-light);
+  padding: 8px 0;
+}
+
+.summary-row:last-child {
+  border-bottom: none;
+  font-weight: bold;
+}

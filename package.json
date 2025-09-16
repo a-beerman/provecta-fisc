@@ -12,7 +12,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
-    "serve:ssr:app": "node www/server/server.mjs"
+    "serve:ssr:app": "node www/server/server.mjs",
+    "build:prod:debug": "ng build --configuration production --base-href=/fisc/ --source-map"
   },
   "private": true,
   "dependencies": {

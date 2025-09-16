@@ -1,0 +1,330 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>{{ "FISCAL_RECEIPT.TITLE" | translate }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismissModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="receiptForm" (ngSubmit)="createReceipt()">
+    <!-- Products Section -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="receipt-outline"></ion-icon>
+          {{ "FISCAL_RECEIPT.PRODUCTS" | translate }}
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div formArrayName="products">
+          <div
+            *ngFor="let product of products.controls; let i = index"
+            [formGroupName]="i"
+          >
+            <ion-grid>
+              <ion-row>
+                <ion-col size="12" size-md="4">
+                  <ion-item>
+                    <ion-input
+                      [label]="'FISCAL_RECEIPT.PRODUCT_NAME' | translate"
+                      labelPlacement="stacked"
+                      formControlName="name"
+                      [placeholder]="
+                        'FISCAL_RECEIPT.PRODUCT_NAME_PLACEHOLDER' | translate
+                      "
+                      type="text"
+                    >
+                    </ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col size="6" size-md="2">
+                  <ion-item>
+                    <ion-input
+                      [label]="'FISCAL_RECEIPT.PRICE' | translate"
+                      labelPlacement="stacked"
+                      formControlName="price"
+                      [placeholder]="
+                        'FISCAL_RECEIPT.PRICE_PLACEHOLDER' | translate
+                      "
+                      type="number"
+                      min="0"
+                      step="0.01"
+                    >
+                    </ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col size="6" size-md="2">
+                  <ion-item>
+                    <ion-input
+                      [label]="'FISCAL_RECEIPT.QUANTITY' | translate"
+                      labelPlacement="stacked"
+                      formControlName="quantity"
+                      [placeholder]="
+                        'FISCAL_RECEIPT.QUANTITY_PLACEHOLDER' | translate
+                      "
+                      type="number"
+                      min="0.01"
+                      step="0.01"
+                    >
+                    </ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col size="6" size-md="2">
+                  <ion-item>
+                    <ion-select
+                      [label]="'FISCAL_RECEIPT.TAX' | translate"
+                      labelPlacement="stacked"
+                      formControlName="taxCode"
+                      [placeholder]="
+                        'FISCAL_RECEIPT.TAX_PLACEHOLDER' | translate
+                      "
+                      (ionChange)="onTaxChange(i, $event.detail.value)"
+                    >
+                      <ion-select-option
+                        *ngFor="let tax of taxOptions"
+                        [value]="tax.code"
+                      >
+                        {{
+                          tax.percent != null
+                            ? tax.percent + "%"
+                            : ('FISCAL_RECEIPT.NO_VAT' | translate)
+                        }}
+                        {{ tax.code }}
+                      </ion-select-option>
+                    </ion-select>
+                  </ion-item>
+                </ion-col>
+                <ion-col size="4" size-md="1">
+                  <div class="product-total">
+                    {{ getProductTotal(i) | number : "1.2-2" }}
+                    {{ "COMMON.CURRENCY" | translate }}
+                  </div>
+                </ion-col>
+                <ion-col size="2" size-md="1">
+                  <ion-button
+                    fill="clear"
+                    color="danger"
+                    (click)="removeProduct(i)"
+                    [disabled]="products.length <= 1"
+                  >
+                    <ion-icon name="remove-outline"></ion-icon>
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </div>
+        </div>
+
+        <ion-button expand="block" fill="outline" (click)="addProduct()">
+          <ion-icon name="add-outline" slot="start"></ion-icon>
+          {{ "FISCAL_RECEIPT.ADD_PRODUCT" | translate }}
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Payments Section -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="card-outline"></ion-icon>
+          {{ "FISCAL_RECEIPT.PAYMENTS" | translate }}
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div formArrayName="payments">
+          <div
+            *ngFor="let payment of payments.controls; let i = index"
+            [formGroupName]="i"
+          >
+            <ion-grid>
+              <ion-row>
+                <ion-col size="12" size-md="6">
+                  <ion-item>
+                    <ion-select
+                      [label]="'FISCAL_RECEIPT.PAYMENT_TYPE' | translate"
+                      labelPlacement="stacked"
+                      formControlName="type"
+                      [placeholder]="
+                        'FISCAL_RECEIPT.PAYMENT_TYPE_PLACEHOLDER' | translate
+                      "
+                    >
+                      <ion-select-option
+                        *ngFor="let type of paymentTypes"
+                        [value]="type.value"
+                      >
+                        {{ type.label | translate }}
+                      </ion-select-option>
+                    </ion-select>
+                  </ion-item>
+                </ion-col>
+                <ion-col size="10" size-md="5">
+                  <ion-item>
+                    <ion-input
+                      [label]="'FISCAL_RECEIPT.AMOUNT' | translate"
+                      labelPlacement="stacked"
+                      formControlName="deposit"
+                      [placeholder]="
+                        'FISCAL_RECEIPT.AMOUNT_PLACEHOLDER' | translate
+                      "
+                      type="number"
+                      min="0.01"
+                      step="0.01"
+                    >
+                    </ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col size="2" size-md="1">
+                  <ion-button
+                    fill="clear"
+                    color="danger"
+                    (click)="removePayment(i)"
+                    [disabled]="payments.length <= 1"
+                  >
+                    <ion-icon name="remove-outline"></ion-icon>
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </div>
+        </div>
+
+        <ion-button expand="block" fill="outline" (click)="addPayment()">
+          <ion-icon name="add-outline" slot="start"></ion-icon>
+          {{ "FISCAL_RECEIPT.ADD_PAYMENT" | translate }}
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Summary Section -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>{{
+          "FISCAL_RECEIPT.SUMMARY" | translate
+        }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6">
+              <strong>{{ "FISCAL_RECEIPT.SUBTOTAL" | translate }}:</strong>
+            </ion-col>
+            <ion-col size="6" class="ion-text-end">
+              {{ getTotalAmount() - getTotalTax() | number : "1.2-2" }}
+              {{ "COMMON.CURRENCY" | translate }}
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="6">
+              <strong>{{ "FISCAL_RECEIPT.TOTAL_TAX" | translate }}:</strong>
+            </ion-col>
+            <ion-col size="6" class="ion-text-end">
+              {{ getTotalTax() | number : "1.2-2" }}
+              {{ "COMMON.CURRENCY" | translate }}
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="6">
+              <strong>{{ "FISCAL_RECEIPT.TOTAL" | translate }}:</strong>
+            </ion-col>
+            <ion-col size="6" class="ion-text-end">
+              <strong
+                >{{ getTotalAmount() | number : "1.2-2" }}
+                {{ "COMMON.CURRENCY" | translate }}</strong
+              >
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="6">
+              {{ "FISCAL_RECEIPT.TOTAL_PAYMENTS" | translate }}:
+            </ion-col>
+            <ion-col size="6" class="ion-text-end">
+              {{ getTotalPayments() | number : "1.2-2" }}
+              {{ "COMMON.CURRENCY" | translate }}
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="getDifference() !== 0">
+            <ion-col size="6">
+              <span
+                [class]="getDifference() > 0 ? 'text-success' : 'text-danger'"
+              >
+                {{ "FISCAL_RECEIPT.DIFFERENCE" | translate }}:
+              </span>
+            </ion-col>
+            <ion-col size="6" class="ion-text-end">
+              <span
+                [class]="getDifference() > 0 ? 'text-success' : 'text-danger'"
+              >
+                {{ getDifference() | number : "1.2-2" }}
+                {{ "COMMON.CURRENCY" | translate }}
+              </span>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+  </form>
+</ion-content>
+<ion-toolbar>
+  <ion-button
+    expand="full"
+    size="large"
+    color="primary"
+    class="ion-no-margin"
+    [disabled]="!isFormValid()"
+    (click)="createReceipt()"
+  >
+    <ion-icon name="receipt-outline" slot="start"></ion-icon>
+    {{ "FISCAL_RECEIPT.CREATE_RECEIPT" | translate }}</ion-button
+  >
+</ion-toolbar>
+<!-- 
+<ion-footer>
+  <ion-toolbar>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="6">
+          <ion-button
+            expand="block"
+            fill="outline"
+            (click)="saveDraft()"
+            [disabled]="!receiptForm.valid"
+          >
+            <ion-icon name="save-outline" slot="start"></ion-icon>
+            {{ "FISCAL_RECEIPT.SAVE_DRAFT" | translate }}
+          </ion-button>
+        </ion-col>
+        <ion-col size="6">
+          <ion-button
+            expand="block"
+            type="submit"
+            [disabled]="!isFormValid()"
+            (click)="createReceipt()"
+          >
+            <ion-icon name="receipt-outline" slot="start"></ion-icon>
+            {{ "FISCAL_RECEIPT.CREATE_RECEIPT" | translate }}
+          </ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="!isFormValid() && getValidationMessage()">
+        <ion-col size="12">
+          <div class="validation-message">
+            {{ getValidationMessage() | translate }}
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-footer> -->
+
+<ion-toast
+  [isOpen]="showToast"
+  [message]="toastMessage | translate"
+  [duration]="3000"
+  [color]="toastColor"
+  (didDismiss)="showToast = false"
+>
+</ion-toast>

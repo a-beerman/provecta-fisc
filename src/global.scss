@@ -66,12 +66,38 @@
   --height: 80%;
 }
 
-
-
 .show-modal {
   --backdrop-opacity: var(--ion-backdrop-opacity, 0.4);
 
   &::part(content) {
     box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
+  }
+}
+
+@media (min-width: 768px) {
+  .modal-small,
+  .numpad-modal {
+    --width: 400px;
+    --height: 600px;
+  }
+
+  .discount-modal::part(content) {
+    width: 600px;
+    height: 400px;
+  }
+
+  .full-modal::part(content) {
+    --width: 95%;
+    --height: 95%;
+  }
+
+  .midsize-modal::part(content) {
+    --width: 75%;
+    --height: 75%;
+  }
+
+  .mev-receipt::part(content) {
+    --width: max(650px, 50%);
+    --height: 80%;
   }
 }

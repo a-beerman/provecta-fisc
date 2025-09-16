@@ -24,7 +24,6 @@ import {
   AlertController,
   IonFooter,
 } from '@ionic/angular/standalone';
-import { TranslateService } from '@ngx-translate/core';
 import { addIcons } from 'ionicons';
 import { closeOutline, saveOutline } from 'ionicons/icons';
 import { MevService } from 'src/app/services/mev.service';
