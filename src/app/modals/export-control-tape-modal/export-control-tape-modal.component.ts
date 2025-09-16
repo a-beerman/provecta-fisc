@@ -1,7 +1,25 @@
 import { Component, OnInit, PLATFORM_ID, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonButton, IonIcon, IonItem, IonLabel, IonList, IonDatetimeButton, IonDatetime, IonModal, IonToast, LoadingController, ModalController, IonFooter } from '@ionic/angular/standalone';
+import {
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonButtons,
+  IonButton,
+  IonIcon,
+  IonItem,
+  IonLabel,
+  IonDatetime,
+  IonToast,
+  LoadingController,
+  ModalController,
+  IonFooter,
+  IonCol,
+  IonRow,
+  IonGrid,
+} from '@ionic/angular/standalone';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { addIcons } from 'ionicons';
 import { closeOutline, cloudDownloadOutline } from 'ionicons/icons';
@@ -26,13 +44,13 @@ import { TranslationService } from '../../services/translation.service';
     IonIcon,
     IonItem,
     IonLabel,
-    IonList,
-    IonDatetimeButton,
     IonDatetime,
-    IonModal,
     IonToast,
-    IonFooter
-],
+    IonFooter,
+    IonCol,
+    IonRow,
+    IonGrid,
+  ],
 })
 export class ExportControlTapeModalComponent implements OnInit {
   dateFrom: string = new Date().toISOString();
@@ -47,7 +65,7 @@ export class ExportControlTapeModalComponent implements OnInit {
     private mevService: MevService,
     public translate: TranslateService,
     private translationService: TranslationService,
-    @Inject(PLATFORM_ID) private platformId: Object,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     addIcons({ closeOutline, cloudDownloadOutline });
   }
@@ -57,9 +75,16 @@ export class ExportControlTapeModalComponent implements OnInit {
     // const today = new Date();
     // const thirtyDaysAgo = new Date();
     // thirtyDaysAgo.setDate(today.getDate() - 30);
-
     // this.dateFrom = thirtyDaysAgo.toISOString();
     // this.dateTo = today.toISOString();
+  }
+
+  onFromDateChange(event: any) {
+    this.dateFrom = event.detail.value;
+  }
+
+  onToDateChange(event: any) {
+    this.dateTo = event.detail.value;
   }
 
   dismissModal() {

@@ -13,7 +13,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "serve:ssr:app": "node www/server/server.mjs",
-    "build:prod:debug": "ng build --configuration production --base-href=/fisc/ --source-map"
+    "build:prod:debug": "ng build --configuration production --base-href=/debug-fisc/ --source-map"
   },
   "private": true,
   "dependencies": {

@@ -2,43 +2,122 @@ ion-datetime {
   --ion-text-color: #000000;
   --ion-color-base: var(--ion-color-primary);
   color: #000000;
+  width: 100%;
+  margin: 0.5rem auto 1rem auto;
+  display: block;
 }
 
-.period {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+ion-grid {
+  padding: 0;
+}
 
-  > div:not(.delimiter) {
-    flex: 1;
+ion-row {
+  margin: 0;
+}
+
+ion-col {
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.date-section {
+  margin-bottom: 1rem;
+  width: 100%;
+  max-width: 400px;
+  
+  .date-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    text-align: center;
+    
+    h3 {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--ion-color-primary);
+    }
   }
 }
 
-// .period {
-//   display: flex;
-//   justify-content: space-between;
-//   align-items: center;
-//   gap: 1rem;
+// Responsive adjustments
+@media (min-width: 768px) {
+  .date-section {
+    margin-bottom: 2rem;
+    
+    .date-label {
+      text-align: center;
+      
+      h3 {
+        text-align: center;
+      }
+    }
+  }
+  
+  ion-col {
+    padding: 1rem;
+  }
+}
 
-//   .delimiter {
-//     font-weight: bold;
-//     font-size: 1.2rem;
-//     color: var(--ion-color-medium);
-//   }
+ion-card {
+  margin: 1rem 0;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
-//   ion-datetime-button {
-//     flex: 1;
-//   }
-// }
+  ion-card-header {
+    padding-bottom: 0;
+  }
 
-// ion-item {
-//   --padding-start: 16px;
-//   --inner-padding-end: 16px;
-// }
+  ion-card-title {
+    color: var(--ion-color-primary);
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
 
-// h3 {
-//   margin: 0;
-//   font-weight: 600;
-//   color: var(--ion-color-primary);
-// }
+  ion-card-content {
+    padding-top: 0.5rem;
+
+    p {
+      margin: 0.5rem 0;
+      font-size: 0.95rem;
+
+      strong {
+        color: var(--ion-color-dark);
+      }
+    }
+  }
+}
+
+ion-item {
+  --padding-start: 16px;
+  --inner-padding-end: 16px;
+  margin-bottom: 1rem;
+
+  ion-label {
+    h2 {
+      margin: 0;
+      font-weight: 600;
+      color: var(--ion-color-primary);
+    }
+
+    p {
+      margin-top: 0.25rem;
+      color: var(--ion-color-medium);
+      font-size: 0.9rem;
+    }
+  }
+}
+
+ion-footer {
+  ion-button {
+    margin: 0;
+    height: 56px;
+    font-weight: 600;
+    font-size: 1rem;
+    
+    &[disabled] {
+      opacity: 0.5;
+    }
+  }
+}

@@ -13,6 +13,7 @@ import {
   IonicRouteStrategy,
   provideIonicAngular,
 } from '@ionic/angular/standalone';
+
 import { Observable } from 'rxjs';
 
 // Custom HTTP loader for translation files
@@ -42,9 +43,9 @@ export const appConfig: ApplicationConfig = {
         loader: {
           provide: TranslateLoader,
           useFactory: HttpLoaderFactory,
-          deps: [HttpClient]
+          deps: [HttpClient],
         },
-        defaultLanguage: 'ro'
+        defaultLanguage: 'ro',
       })
     ),
   ],

@@ -51,6 +51,7 @@ import { MevCardModalComponent } from '../modals/mev-card-modal/mev-card-modal.c
 import { MevReceiptInfoComponent } from '../modals/mev-receipt-info/mev-receipt-info.component';
 import { Utils } from '../services/utils';
 import { FiscalReceiptModalComponent } from '../modals/fiscal-receipt-modal/fiscal-receipt-modal.component';
+import { ExportControlTapeModalComponent } from '../modals/export-control-tape-modal/export-control-tape-modal.component';
 
 interface SectionCard {
   id: string;
@@ -403,9 +404,6 @@ export class HomePage implements OnInit, AfterViewInit {
   }
 
   async openMevCardModal() {
-    const { MevCardModalComponent } = await import(
-      '../modals/mev-card-modal/mev-card-modal.component'
-    );
     const modal = await this.modalController.create({
       component: MevCardModalComponent,
       cssClass: 'mev-card-modal',
@@ -429,12 +427,9 @@ export class HomePage implements OnInit, AfterViewInit {
   }
 
   async openExportControlTapeModal() {
-    const { ExportControlTapeModalComponent } = await import(
-      '../modals/export-control-tape-modal/export-control-tape-modal.component'
-    );
     const modal = await this.modalController.create({
       component: ExportControlTapeModalComponent,
-      cssClass: 'export-control-tape-modal',
+      cssClass: 'midsize-modal',
     });
     return await modal.present();
   }
@@ -542,7 +537,7 @@ export class HomePage implements OnInit, AfterViewInit {
           receipt,
           mevReceipt: mevReceipt,
         },
-        cssClass: 'mev-receipt',
+        // cssClass: 'mev-receipt',
       })
       .then((modal) => {
         modal.present();

@@ -10,22 +10,51 @@
 </ion-header>
 
 <ion-content>
-  <ion-list>
+  <div class="ion-padding">
     <ion-item>
       <ion-label class="ion-text-center">
-        <h3>{{ "EXPORT_CONTROL_TAPE.PERIOD_LABEL" | translate }}</h3>
+        <h2>{{ "EXPORT_CONTROL_TAPE.PERIOD_LABEL" | translate }}</h2>
+        <p>{{ "SELECT_VALID_PERIOD" | translate }}</p>
       </ion-label>
     </ion-item>
-    <div class="period ion-padding">
-      <div>
-        <ion-datetime-button datetime="dateFrom"></ion-datetime-button>
-      </div>
-      <div class="delimiter">-</div>
-      <div>
-        <ion-datetime-button datetime="dateTo"></ion-datetime-button>
-      </div>
-    </div>
-  </ion-list>
+
+    <!-- Date Pickers Row Layout -->
+    <ion-grid>
+      <ion-row>
+        <!-- From Date Picker -->
+        <ion-col size="12" size-md="6" class="ion-text-center">
+          <div class="date-section">
+            <ion-label class="date-label">
+              <h3>{{ "FROM_DATE" | translate }}</h3>
+            </ion-label>
+            <ion-datetime
+              presentation="date"
+              [locale]="translate.currentLang"
+              [(ngModel)]="dateFrom"
+              [max]="dateTo || undefined"
+              (ionChange)="onFromDateChange($event)"
+            ></ion-datetime>
+          </div>
+        </ion-col>
+
+        <!-- To Date Picker -->
+        <ion-col size="12" size-md="6" class="ion-text-center">
+          <div class="date-section">
+            <ion-label class="date-label">
+              <h3>{{ "TO_DATE" | translate }}</h3>
+            </ion-label>
+            <ion-datetime
+              presentation="date"
+              [locale]="translate.currentLang"
+              [(ngModel)]="dateTo"
+              [min]="dateFrom || undefined"
+              (ionChange)="onToDateChange($event)"
+            ></ion-datetime>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
 
   <ion-toast
     [isOpen]="showToast"
@@ -36,6 +65,7 @@
   >
   </ion-toast>
 </ion-content>
+
 <ion-footer>
   <ion-toolbar>
     <ion-button
@@ -43,41 +73,15 @@
       size="large"
       color="primary"
       class="ion-no-margin"
+      [disabled]="!dateFrom || !dateTo"
       (click)="downloadControlTape()"
     >
       <ion-icon
         slot="start"
         name="cloud-download-outline"
         color="light"
-      ></ion-icon
-      >{{ "EXPORT_CONTROL_TAPE.DOWNLOAD_BUTTON" | translate }}</ion-button
-    >
+      ></ion-icon>
+      {{ "EXPORT_CONTROL_TAPE.DOWNLOAD_BUTTON" | translate }}
+    </ion-button>
   </ion-toolbar>
 </ion-footer>
-
-<ion-modal [keepContentsMounted]="true">
-  <ng-template>
-    <ion-datetime
-      id="dateFrom"
-      presentation="date"
-      [locale]="translate.currentLang"
-      [showDefaultButtons]="true"
-      [(ngModel)]="dateFrom"
-      [cancelText]="'COMMON.DISMISS' | translate"
-      [doneText]="'COMMON.DONE' | translate"
-    ></ion-datetime>
-  </ng-template>
-</ion-modal>
-<ion-modal [keepContentsMounted]="true">
-  <ng-template>
-    <ion-datetime
-      id="dateTo"
-      presentation="date"
-      [locale]="translate.currentLang"
-      [showDefaultButtons]="true"
-      [(ngModel)]="dateTo"
-      [cancelText]="'COMMON.DISMISS' | translate"
-      [doneText]="'COMMON.DONE' | translate"
-    ></ion-datetime>
-  </ng-template>
-</ion-modal>
