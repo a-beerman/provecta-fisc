@@ -498,9 +498,16 @@ export class MevService {
   public createCard(entity: any & { endpoint: string }): Observable<any> {
     const apiPath = 'cards';
 
-    return this.http.post(`${this.HOST}${apiPath}`, entity, {
-      headers: this.headers,
-    });
+    return this.http.post(
+      `${this.HOST}${apiPath}`,
+      {
+        ...entity,
+        type: 3,
+      },
+      {
+        headers: this.headers,
+      }
+    );
   }
 
   public findCards(): Observable<any> {

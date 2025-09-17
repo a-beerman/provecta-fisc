@@ -208,7 +208,7 @@
       </ion-card-header>
       <ion-card-content>
         <ion-grid>
-          <ion-row>
+          <!-- <ion-row>
             <ion-col size="6">
               <strong>{{ "FISCAL_RECEIPT.SUBTOTAL" | translate }}:</strong>
             </ion-col>
@@ -216,16 +216,8 @@
               {{ getTotalAmount() - getTotalTax() | number : "1.2-2" }}
               {{ "COMMON.CURRENCY" | translate }}
             </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col size="6">
-              <strong>{{ "FISCAL_RECEIPT.TOTAL_TAX" | translate }}:</strong>
-            </ion-col>
-            <ion-col size="6" class="ion-text-end">
-              {{ getTotalTax() | number : "1.2-2" }}
-              {{ "COMMON.CURRENCY" | translate }}
-            </ion-col>
-          </ion-row>
+          </ion-row> -->
+          
           <ion-row>
             <ion-col size="6">
               <strong>{{ "FISCAL_RECEIPT.TOTAL" | translate }}:</strong>
@@ -237,6 +229,7 @@
               >
             </ion-col>
           </ion-row>
+          
           <ion-row>
             <ion-col size="6">
               {{ "FISCAL_RECEIPT.TOTAL_PAYMENTS" | translate }}:
