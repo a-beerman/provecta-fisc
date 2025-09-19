@@ -573,6 +573,7 @@ export class HomePage implements OnInit, AfterViewInit {
 
         if (cards?.length) {
           this.card.set(cards[0]);
+          this.mevService.setActiveCard(this.card());
         } else {
           this.modalController
             .create({
@@ -594,16 +595,6 @@ export class HomePage implements OnInit, AfterViewInit {
       });
   }
 
-  onCardSelectionChange(event: any) {
-    const selectedCardId = event.detail.value;
-    const selectedCard = this.cards().find(
-      (card) => card.id === selectedCardId
-    );
-    if (selectedCard) {
-      this.card.set(selectedCard);
-    }
-  }
-
   onSwiperSlideChange(event: any) {
     const swiper = event.target.swiper;
     const activeIndex = swiper.activeIndex;
@@ -620,37 +611,5 @@ export class HomePage implements OnInit, AfterViewInit {
     const cards = this.cards();
     const currentCard = this.card();
     return currentCard ? cards.findIndex((c) => c.id === currentCard.id) : 0;
-  }
-
-  // Card navigation methods
-  previousCard() {
-    const currentIndex = this.cards().indexOf(this.card());
-    if (currentIndex > 0) {
-      this.slideToCard(this.cards()[currentIndex - 1]);
-    }
-  }
-
-  nextCard() {
-    const currentIndex = this.cards().indexOf(this.card());
-    if (currentIndex < this.cards().length - 1) {
-      this.slideToCard(this.cards()[currentIndex + 1]);
-    }
-  }
-
-  selectCard(selectedCard: any) {
-    this.slideToCard(selectedCard);
-  }
-
-  private slideToCard(selectedCard: any) {
-    this.isSliding.set(true);
-    setTimeout(() => {
-      this.card.set(selectedCard);
-      this.isSliding.set(false);
-    }, 150);
-  }
-
-  viewCardDetails() {
-    // TODO: Implement card details modal
-    this.showInfoMessage('Detalii card - va fi implementat în curând');
   }
 }

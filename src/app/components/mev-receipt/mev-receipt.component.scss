@@ -11,6 +11,10 @@ p {
   justify-content: center;
   align-items: center;
   padding: 10px;
+
+  &:hover {
+    opacity: 0.6;
+  }
 }
 
 .mev {

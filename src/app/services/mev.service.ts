@@ -218,7 +218,9 @@ export class MevService {
   ) {}
 
   public setActiveCard(card: any) {
-    this.card = card;
+    this.card = {
+      number: card.number,
+    };
   }
 
   public addFiscalReceipt(receipt: MevReceipt): Observable<any> {

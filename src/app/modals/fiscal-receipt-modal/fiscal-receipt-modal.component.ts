@@ -334,13 +334,10 @@ export class FiscalReceiptModalComponent implements OnInit {
         address: this.receiptForm.get('email')?.value || '',
       },
       data: {
-        total: this.getTotalAmount().toString(),
-        payments: {
-          field: this.payments.value.map((p: any) => ({
-            type: p.type?.toString() || '',
-            deposit: p.deposit?.toString() || '0',
-          })),
-        },
+        payments: this.payments.value.map((p: any) => ({
+          type: p.type,
+          deposit: p.deposit,
+        })),
       },
     };
 
