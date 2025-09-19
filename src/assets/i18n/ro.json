@@ -81,6 +81,7 @@
     "PRODUCTS": "Produse",
     "PAYMENTS": "Plăți",
     "SUMMARY": "Sumar",
+    "EMAIL": "Email",
     "PRODUCT_NAME": "Nume Produs",
     "PRICE": "Preț",
     "QUANTITY": "Cantitate",
@@ -100,6 +101,9 @@
     "DIFFERENCE": "Diferență",
     "SAVE_DRAFT": "Salvează Ciorna",
     "CREATE_RECEIPT": "Creează Bon",
+    "VALIDATION_EMAIL": "Adresa de email validă este obligatorie",
+    "VALIDATION_EMAIL_REQUIRED": "Adresa de email este obligatorie",
+    "VALIDATION_EMAIL_FORMAT": "Vă rugăm să introduceți o adresă de email validă",
     "VALIDATION_PRODUCTS": "Toate produsele trebuie să fie completate corect",
     "VALIDATION_PAYMENTS": "Toate plățile trebuie să fie completate corect",
     "VALIDATION_PAYMENT_MISMATCH": "Totalul plăților trebuie să fie egal cu totalul comenzii",
@@ -112,6 +116,7 @@
     "TAX_PLACEHOLDER": "Selectează cota TVA",
     "PAYMENT_TYPE_PLACEHOLDER": "Selectează tipul plății",
     "AMOUNT_PLACEHOLDER": "ex. 50.00",
+    "EMAIL_PLACEHOLDER": "ex. client@exemplu.com",
     "NO_VAT": "Fără TVA"
   }
 }

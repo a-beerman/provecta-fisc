@@ -113,23 +113,28 @@ export class ExportControlTapeModalComponent implements OnInit {
     await loading.present();
 
     try {
-      const from = this.formatDateForAPI(this.dateFrom);
-      const to = this.formatDateForAPI(this.dateTo);
+      const fromDateFormatted = `${this.dateFrom.split('T')[0]}T00:00:00.000`;
+      const toDateFormatted = `${this.dateTo.split('T')[0]}T23:59:59.999`;
 
-      this.mevService.getReceiptsByPeriod(null, from, to).subscribe({
-        next: (blob: Blob) => {
-          this.downloadFile(blob, `control-tape-${from}-${to}.txt`);
-          this.showSuccessMessage(
-            'Banda de control a fost descărcată cu succes'
-          );
-          loading.dismiss();
-        },
-        error: (error) => {
-          console.error('Error downloading control tape:', error);
-          this.showErrorMessage('Eroare la descărcarea benzii de control');
-          loading.dismiss();
-        },
-      });
+      this.mevService
+        .getReceiptsByPeriod(fromDateFormatted, toDateFormatted)
+        .subscribe({
+          next: (blob: Blob) => {
+            this.downloadFile(
+              blob,
+              `control-tape-${fromDateFormatted}-${toDateFormatted}.txt`
+            );
+            this.showSuccessMessage(
+              'Banda de control a fost descărcată cu succes'
+            );
+            loading.dismiss();
+          },
+          error: (error) => {
+            console.error('Error downloading control tape:', error);
+            this.showErrorMessage('Eroare la descărcarea benzii de control');
+            loading.dismiss();
+          },
+        });
     } catch (error) {
       console.error('Error:', error);
       this.showErrorMessage('Eroare la descărcarea benzii de control');

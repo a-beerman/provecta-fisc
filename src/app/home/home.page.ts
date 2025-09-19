@@ -5,14 +5,14 @@ import {
   Inject,
   AfterViewInit,
   signal,
+  ViewChild,
+  ElementRef,
+  CUSTOM_ELEMENTS_SCHEMA,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   IonContent,
-  IonHeader,
-  IonTitle,
-  IonToolbar,
   IonCard,
   IonCardHeader,
   IonCardTitle,
@@ -42,6 +42,10 @@ import {
   calculatorOutline,
   cloudDownloadOutline,
   addCircleOutline,
+  chevronDownOutline,
+  chevronBackOutline,
+  chevronForwardOutline,
+  informationCircleOutline,
 } from 'ionicons/icons';
 import { finalize, tap } from 'rxjs';
 import { NumpadComponent } from '../components/numpad/numpad.component';
@@ -51,6 +55,7 @@ import { MevCardModalComponent } from '../modals/mev-card-modal/mev-card-modal.c
 import { MevReceiptInfoComponent } from '../modals/mev-receipt-info/mev-receipt-info.component';
 import { Utils } from '../services/utils';
 import { FiscalReceiptModalComponent } from '../modals/fiscal-receipt-modal/fiscal-receipt-modal.component';
+import { register } from 'swiper/element/bundle';
 import { ExportControlTapeModalComponent } from '../modals/export-control-tape-modal/export-control-tape-modal.component';
 
 interface SectionCard {
@@ -70,14 +75,12 @@ interface AppSection {
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
     CommonModule,
     FormsModule,
     TranslateModule,
     IonContent,
-    IonHeader,
-    IonTitle,
-    IonToolbar,
     IonCard,
     IonCardHeader,
     IonCardTitle,
@@ -90,6 +93,8 @@ interface AppSection {
   ],
 })
 export class HomePage implements OnInit, AfterViewInit {
+  @ViewChild('cardSwiper', { static: false }) cardSwiper?: ElementRef<any>;
+
   exportControlTape(): void {
     throw new Error('Method not implemented.');
   }
@@ -205,6 +210,8 @@ export class HomePage implements OnInit, AfterViewInit {
   ];
 
   card = signal<any | null>(null);
+  cards = signal<any[]>([]);
+  isSliding = signal<boolean>(false);
 
   // cards$ = this.mevService.findCards().pipe(
   //   tap((cards: any[]) => {
@@ -222,6 +229,9 @@ export class HomePage implements OnInit, AfterViewInit {
     private alertController: AlertController,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
+    // Register Swiper custom elements
+    register();
+
     addIcons({
       documentTextOutline,
       receiptOutline,
@@ -236,6 +246,7 @@ export class HomePage implements OnInit, AfterViewInit {
       calculatorOutline,
       cloudDownloadOutline,
       addCircleOutline,
+      chevronDownOutline,
     });
   }
 
@@ -557,6 +568,9 @@ export class HomePage implements OnInit, AfterViewInit {
       .subscribe((cards: any) => {
         console.log(cards);
 
+        // Update cards signal with all available cards
+        this.cards.set(cards || []);
+
         if (cards?.length) {
           this.card.set(cards[0]);
         } else {
@@ -573,9 +587,70 @@ export class HomePage implements OnInit, AfterViewInit {
             .then((result) => {
               if (result.role == 'created' && result.data) {
                 this.card.set(result.data);
+                this.cards.set([result.data]);
               }
             });
         }
       });
+  }
+
+  onCardSelectionChange(event: any) {
+    const selectedCardId = event.detail.value;
+    const selectedCard = this.cards().find(
+      (card) => card.id === selectedCardId
+    );
+    if (selectedCard) {
+      this.card.set(selectedCard);
+    }
+  }
+
+  onSwiperSlideChange(event: any) {
+    const swiper = event.target.swiper;
+    const activeIndex = swiper.activeIndex;
+    const cards = this.cards();
+
+    if (cards[activeIndex]) {
+      this.card.set(cards[activeIndex]);
+    }
+
+    this.mevService.setActiveCard(this.card());
+  }
+
+  getCurrentCardIndex(): number {
+    const cards = this.cards();
+    const currentCard = this.card();
+    return currentCard ? cards.findIndex((c) => c.id === currentCard.id) : 0;
+  }
+
+  // Card navigation methods
+  previousCard() {
+    const currentIndex = this.cards().indexOf(this.card());
+    if (currentIndex > 0) {
+      this.slideToCard(this.cards()[currentIndex - 1]);
+    }
+  }
+
+  nextCard() {
+    const currentIndex = this.cards().indexOf(this.card());
+    if (currentIndex < this.cards().length - 1) {
+      this.slideToCard(this.cards()[currentIndex + 1]);
+    }
+  }
+
+  selectCard(selectedCard: any) {
+    this.slideToCard(selectedCard);
+  }
+
+  private slideToCard(selectedCard: any) {
+    this.isSliding.set(true);
+    setTimeout(() => {
+      this.card.set(selectedCard);
+      this.isSliding.set(false);
+    }, 150);
+  }
+
+  viewCardDetails() {
+    // TODO: Implement card details modal
+    this.showInfoMessage('Detalii card - va fi implementat în curând');
   }
 }

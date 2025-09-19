@@ -28,6 +28,7 @@ import {
   IonRow,
   IonCol,
   IonToast,
+  IonText,
   ModalController,
   LoadingController,
   AlertController,
@@ -41,6 +42,7 @@ import {
   saveOutline,
   trashOutline,
   receiptOutline,
+  mailOutline,
 } from 'ionicons/icons';
 import {
   MevReceipt,
@@ -62,6 +64,18 @@ interface Product {
 interface Payment {
   type: PaymentType;
   deposit: number;
+}
+
+interface ReceiptDataWithEmail {
+  email?: string;
+  total?: string;
+  idns?: string;
+  payments: {
+    field: Array<{
+      type: string;
+      deposit: string;
+    }>;
+  };
 }
 
 @Component({
@@ -93,6 +107,7 @@ interface Payment {
     IonRow,
     IonCol,
     IonToast,
+    IonText,
   ],
 })
 export class FiscalReceiptModalComponent implements OnInit {
@@ -135,6 +150,7 @@ export class FiscalReceiptModalComponent implements OnInit {
       saveOutline,
       trashOutline,
       receiptOutline,
+      mailOutline,
     });
   }
 
@@ -144,6 +160,7 @@ export class FiscalReceiptModalComponent implements OnInit {
 
   private initializeForm() {
     this.receiptForm = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.email]],
       products: this.formBuilder.array([]),
       payments: this.formBuilder.array([]),
     });
@@ -247,15 +264,33 @@ export class FiscalReceiptModalComponent implements OnInit {
 
   // Validation
   isFormValid(): boolean {
+    const hasValidEmail = this.receiptForm.get('email')?.valid || false;
     const hasValidProducts = this.products.valid && this.products.length > 0;
     const hasValidPayments = this.payments.valid && this.payments.length > 0;
     const paymentsMatchTotal = this.getTotalPayments() >= this.getTotalAmount();
     // Math.abs(this.getTotalPayments() - this.getTotalAmount()) < 0.01;
 
-    return hasValidProducts && hasValidPayments && paymentsMatchTotal;
+    return (
+      hasValidEmail &&
+      hasValidProducts &&
+      hasValidPayments &&
+      paymentsMatchTotal
+    );
   }
 
-  getValidationMessage(): string {
+  getValidationMessage(fieldName?: string): string {
+    if (fieldName === 'email' && !this.receiptForm.get('email')?.valid) {
+      const emailControl = this.receiptForm.get('email');
+      if (emailControl?.errors?.['required']) {
+        return 'FISCAL_RECEIPT.VALIDATION_EMAIL_REQUIRED';
+      }
+      if (emailControl?.errors?.['email']) {
+        return 'FISCAL_RECEIPT.VALIDATION_EMAIL_FORMAT';
+      }
+    }
+    if (!this.receiptForm.get('email')?.valid) {
+      return 'FISCAL_RECEIPT.VALIDATION_EMAIL';
+    }
     if (!this.products.valid) {
       return 'FISCAL_RECEIPT.VALIDATION_PRODUCTS';
     }
@@ -295,13 +330,21 @@ export class FiscalReceiptModalComponent implements OnInit {
           percent: p.taxPercent,
         },
       })),
+      client: {
+        address: this.receiptForm.get('email')?.value || '',
+      },
       data: {
-        payments: this.payments.value.map((p: any) => ({
-          type: p.type,
-          deposit: p.deposit,
-        })),
+        total: this.getTotalAmount().toString(),
+        payments: {
+          field: this.payments.value.map((p: any) => ({
+            type: p.type?.toString() || '',
+            deposit: p.deposit?.toString() || '0',
+          })),
+        },
       },
     };
+
+    // Email field is now sent as client.address in the MEV receipt
 
     const loading = await this.loadingController.create({
       message: this.translate.instant('FISCAL_RECEIPT.RECEIPT_CREATING'),

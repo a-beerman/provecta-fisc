@@ -64,27 +64,27 @@ export class MevCardModalComponent implements OnInit {
     {
       key: 'factory',
       label: 'Fabricant',
-      placeholder: 'FactoryNumber 1234',
+      placeholder: 'FactoryNumber',
       type: 'text',
     },
-    { key: 'number', label: 'Număr', placeholder: 'Number 1234', type: 'text' },
-    { key: 'model', label: 'Model', placeholder: 'Model 1234', type: 'text' },
-    { key: 'idnx', label: 'IDNX', placeholder: 'Idnx 1234', type: 'text' },
-    { key: 'name', label: 'Nume', placeholder: 'Name 1234', type: 'text' },
+    { key: 'number', label: 'Număr', placeholder: 'Number', type: 'text' },
+    { key: 'model', label: 'Model', placeholder: 'Model', type: 'text' },
+    { key: 'idnx', label: 'IDNX', placeholder: 'Idnx', type: 'text' },
+    { key: 'name', label: 'Nume', placeholder: 'Name', type: 'text' },
     {
       key: 'address',
       label: 'Adresă',
-      placeholder: 'Address 1234',
+      placeholder: 'Address',
       type: 'text',
     },
     {
       key: 'subdivision',
       label: 'Subdiviziune',
-      placeholder: 'Subdivision 1234',
+      placeholder: 'Subdivision',
       type: 'text',
     },
-    { key: 'point', label: 'Punct', placeholder: 'Point 1234', type: 'text' },
-    { key: 'key', label: 'Cheie', placeholder: 'Key 1234', type: 'text' },
+    { key: 'point', label: 'Punct', placeholder: 'Point', type: 'text' },
+    { key: 'key', label: 'Cheie', placeholder: 'Key', type: 'text' },
   ];
 
   constructor(

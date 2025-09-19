@@ -81,6 +81,7 @@
     "PRODUCTS": "Products",
     "PAYMENTS": "Payments",
     "SUMMARY": "Summary",
+    "EMAIL": "Email",
     "PRODUCT_NAME": "Product Name",
     "PRICE": "Price",
     "QUANTITY": "Quantity",
@@ -100,6 +101,9 @@
     "DIFFERENCE": "Difference",
     "SAVE_DRAFT": "Save Draft",
     "CREATE_RECEIPT": "Create Receipt",
+    "VALIDATION_EMAIL": "Valid email address is required",
+    "VALIDATION_EMAIL_REQUIRED": "Email address is required",
+    "VALIDATION_EMAIL_FORMAT": "Please enter a valid email address",
     "VALIDATION_PRODUCTS": "All products must be filled correctly",
     "VALIDATION_PAYMENTS": "All payments must be filled correctly",
     "VALIDATION_PAYMENT_MISMATCH": "Total payments must equal order total",
@@ -112,6 +116,7 @@
     "TAX_PLACEHOLDER": "Select VAT rate",
     "PAYMENT_TYPE_PLACEHOLDER": "Select payment type",
     "AMOUNT_PLACEHOLDER": "e.g. 50.00",
+    "EMAIL_PLACEHOLDER": "e.g. customer@example.com",
     "NO_VAT": "No VAT"
   }
 }

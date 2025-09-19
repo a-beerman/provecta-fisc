@@ -126,6 +126,34 @@
       </ion-card-content>
     </ion-card>
 
+    <!-- Email Section -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="mail-outline"></ion-icon>
+          {{ "FISCAL_RECEIPT.EMAIL" | translate }}
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <ion-input
+            [label]="'FISCAL_RECEIPT.EMAIL' | translate"
+            labelPlacement="stacked"
+            formControlName="email"
+            [placeholder]="'FISCAL_RECEIPT.EMAIL_PLACEHOLDER' | translate"
+            type="email"
+            required
+          >
+          </ion-input>
+        </ion-item>
+        <div class="validation-errors" *ngIf="receiptForm.get('email')?.invalid && receiptForm.get('email')?.touched">
+          <ion-text color="danger">
+            <small>{{ getValidationMessage('email') }}</small>
+          </ion-text>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
     <!-- Payments Section -->
     <ion-card>
       <ion-card-header>

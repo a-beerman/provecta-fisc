@@ -115,6 +115,9 @@ export interface MevReceipt {
   receipt: string;
   report: string;
   datetime: string;
+  client: {
+    address: string;
+  };
   card: {
     type: number;
     factory: string;
@@ -197,7 +200,7 @@ const allVatLetters = ['A', 'B', 'C', 'D', 'E'];
 })
 export class MevService {
   private HOST = 'https://mev.melitax.md:6656/api/';
-  card: any;
+  private card: any;
   // private HOST = 'https://provectadevices.com:3100/api/';
 
   get headers(): HttpHeaders {
@@ -213,6 +216,10 @@ export class MevService {
   constructor(
     private readonly http: HttpClient // private insight: InsightsService, // private modalCtrl: ModalController, // private vatService: VatService
   ) {}
+
+  public setActiveCard(card: any) {
+    this.card = card;
+  }
 
   public addFiscalReceipt(receipt: MevReceipt): Observable<any> {
     const apiPath = 'acps/addFiscalReceipt';
@@ -476,13 +483,9 @@ export class MevService {
     // );
   }
 
-  public getReceiptsByPeriod(
-    unit: any,
-    from: string,
-    to: string
-  ): Observable<any> {
+  public getReceiptsByPeriod(from: string, to: string): Observable<any> {
     const apiPath = 'shared/text';
-    const mevCard = this.getMevCard(unit);
+    const mevCard = this.card;
 
     const queryParams = new URLSearchParams();
     queryParams.append('issuedOnFrom', from);
